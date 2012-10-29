@@ -1,0 +1,12 @@
+
+	Google 新聞 RSS - http://news.google.com.tw/news?pz=1&cf=all&ned=tw&hl=zh-TW&output=rss
+	內容不會是全部，所以要配合 Google Reader 來抓取新聞。
+	
+	Google 有 10 個分類
+	UDN聯合新聞網有 49 個分類
+	YAHOO!奇摩新聞有 57 個分類
+	中國時報有 40 個分類
+	
+	中研院斷詞系統 http://ckipsvr.iis.sinica.edu.tw/
+	
+	

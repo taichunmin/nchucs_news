@@ -1,0 +1,16 @@
+'　' -> ','
+
+\r
+\n
+-(DASHCATEGORY)
+/(FW)
+！(EXCLAMATIONCATEGORY)
+→(FW)
+：(COLONCATEGORY)
+。(PERIODCATEGORY)
+，(COMMACATEGORY)
+"(FW)
+	(FW)
+、(PAUSECATEGORY)
+
+',,' -> ',' * oo
