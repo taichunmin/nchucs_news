@@ -11,6 +11,7 @@
 	$queryURL = '?r=o&n=1000&client=scroll&ot=';
 	$newsAddCnt = 0;
 	
+	/*
 	// 清除舊的新聞
 	$cli->p("Deleting old news, Please Wait...\n");
 	$sql1 = "from `news` where `news_t`<'".date('Y-m-d',time()-7*24*60*60)."'";
@@ -23,6 +24,7 @@
 	$sql = "delete $sql1";
 	tai_mysqlExec($sql);
 	$cli->p("在 news 刪除了 %d 筆新聞\n",mysql_affected_rows());
+	*/
 	
 	$sql = "select * from `rss` where `proc`='{$cfg['proc']}' order by `rid` ";
 	$rssRes = mysql_query($sql);
@@ -62,11 +64,11 @@
 				
 				// UDN 聯合新聞網
 				usleep(rand(10000,20000));		// 延遲 0.1s ~ 0.2s
-				$html = iconv('big5','utf-8//IGNORE',file_get_contents($news['alternate'][0]['href']));
+				$html = iconv('cp950','utf-8//IGNORE',file_get_contents($news['alternate'][0]['href']));
 				//echo $html;
 				
-				$html = preg_match('~<div class="story" id="story">(.*?)</div>~us',$html,$html);
-				$html = @mysql_escape_string($html);
+				preg_match('~<div[^>]*?id="story">(.*?)</div> <P>~us',$html,$html);
+				$html = @mysql_escape_string(trim(strip_tags($html[1])));
 				if( $html == '' ) continue;		// 網頁沒內容
 				
 				$sql = "insert into `news` (title,article,news_t,url,rid) values ('{$news['title']}','$html','{$news['news_t']}','{$news['alternate'][0]['href']}','{$rssRow['rid']}')";
