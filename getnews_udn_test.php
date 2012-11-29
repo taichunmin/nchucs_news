@@ -50,6 +50,7 @@
 			$pc->p('Get NEWS... %d%% of '.count($rssFeed['items']));
 			foreach($rssFeed['items'] as $news)
 			{
+				$cli->pause();
 				$pc->c();
 				$news['crawlTimeMsec'] = substr($news['crawlTimeMsec'],0,-3);
 				if( $news['crawlTimeMsec'] > $rssFeed['updated'] ) $rssFeed['updated'] = $news['crawlTimeMsec'];
@@ -58,25 +59,34 @@
 				$news['alternate'][0]['href'] = @mysql_escape_string($news['alternate'][0]['href']);
 				
 				// 確認網頁是否抓取過
+				$cli->p( strstr($news['alternate'][0]['href'],'=') );
 				$sql = "select count(*) as 'cnt' from `news` where `url`='{$news['alternate'][0]['href']}'";
 				$res = mysql_query($sql);
 				$row = mysql_fetch_assoc($res);
 				@mysql_free_result($res);
-				if($row['cnt']>0)continue;		// 已有重複
+				if($row['cnt']>0)
+				{
+					$cli->p("URL 重複: {$news['alternate'][0]['href']}\n");
+					continue;		// 已有重複
+				}
 				
 				// UDN 聯合新聞網
-				usleep(rand(100000,200000));		// 延遲 0.1s ~ 0.2s
+				usleep(rand(10000,20000));		// 延遲 0.1s ~ 0.2s
 				$html = iconv('cp950','utf-8//IGNORE',tai_udnGetNews($news['alternate'][0]['href']));
 				//echo $html;
 				
 				$dom->load($html);
 				$html = $dom->find('#story',0)->plaintext;
 				$dom->clear();
-				$html = @mysql_escape_string(trim(strip_tags($html)));
-				if( $html == '' ) continue;		// 網頁沒內容
+				$html = @mysql_escape_string($html);
+				if( $html == '' )
+				{
+					$cli->p("該 URL 抓不到內容: {$news['alternate'][0]['href']}\n");
+					continue;		// 網頁沒內容
+				}
 				
 				$sql = "insert into `news` (title,article,news_t,url,rid) values ('{$news['title']}','$html','{$news['news_t']}','{$news['alternate'][0]['href']}','{$rssRow['rid']}')";
-				tai_mysqlExec($sql);
+				//tai_mysqlExec($sql);
 				
 				$newsAddCnt++;
 			}
@@ -85,7 +95,7 @@
 			if( count($rssFeed['items']) < 999 ) break;
 		}
 		$sql = "update `rss` set `varible` = '".@mysql_escape_string(json_encode($rssVar))."' where `rid` = '{$rssRow['rid']}' ";
-		tai_mysqlExec($sql);
+		//tai_mysqlExec($sql);
 	}
 	$cli->p("新增了 $newsAddCnt 筆記錄。");
 	$sql = "delete from `news` where `article`=''";
@@ -116,16 +126,8 @@
 				'user-agent:Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
 			)
 		);
-		
-		// 錯誤時重試 3 次
-		for($i=0;$i<3;$i++)
-		{
-			curl_setopt_array($ch, $options);
-			$html = curl_exec($ch); 
-			if( curl_getinfo($ch, CURLINFO_HTTP_CODE) == 200 )
-				break;
-			usleep(rand(1000000,2000000));		// 延遲 1s ~ 2s
-		}
+		curl_setopt_array($ch, $options);
+		$html = curl_exec($ch); 
 		
 		// 儲存最後的有效網址
 		$referer = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
