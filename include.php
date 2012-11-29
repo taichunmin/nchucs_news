@@ -16,13 +16,21 @@
 	// 設定不同主機資料庫之設定
 	switch($_SERVER['HTTP_HOST'])
 	{
-	case '140.120.80.193':
 	case '127.0.0.1':
-	default:
 		$cfg['dbHost'] = 'localhost';
 		$cfg['dbUser'] = 'nchucsnews';
 		$cfg['dbPass'] = 't5KthfzGKpts4ctc';
 		$cfg['dbDatabase'] = 'nchucsnews';
+		// mysqldump -u root -p nchucsnews > db.sql
+		break;
+	case '140.120.15.146':
+	case 'dmlab.cs.nchu.edu.tw':
+	default:
+		$cfg['dbHost'] = 'localhost';
+		$cfg['dbUser'] = 'newsrecommender';
+		$cfg['dbPass'] = 'news@)!@';
+		$cfg['dbDatabase'] = 'newsrecommender';
+		// mysql -u newsrecommender -p newsrecommender < db.sql
 		break;
 	}
 	function tai_mysqlConnect()	// 連接資料庫
