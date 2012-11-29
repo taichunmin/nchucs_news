@@ -46,7 +46,7 @@ if( !$ses->uid ) { // 未登入，顯示登入的表單。
 				<input type="password" name="pass" value="" tabindex="2" />
 				<div class="ui-grid-a">
 					<div class="ui-block-a">
-						<a href="register.php" data-role="button" data-theme="d" >註冊</a>
+						<a href="register.php" data-role="button" data-theme="d" data-ajax="false" >註冊</a>
 					</div>
 					<div class="ui-block-b">
 						<input type="submit" name="submit" value="登入" data-theme="e" />
@@ -79,23 +79,8 @@ else	// 已登入，顯示功能選單
 					</a>
 				</div>
 				<div class="ui-block-c">
-					<a data-role="button" href="#page1">
-						瀏覽<br />紀錄
-					</a>
-				</div>
-				<div class="ui-block-a">
-					<a data-role="button" href="#page1">
-						Button
-					</a>
-				</div>
-				<div class="ui-block-b">
-					<a data-role="button" href="#page1">
-						Button
-					</a>
-				</div>
-				<div class="ui-block-c">
-					<a data-role="button" href="#page1">
-						Button
+					<a data-role="button" href="recommand1.php">
+						推薦1<br />測試
 					</a>
 				</div>
 			</div>

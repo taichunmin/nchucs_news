@@ -53,6 +53,7 @@
 	<div data-role="page" id="register" class="type-interior" data-add-back-btn="true">
 		<div data-role="header" data-position="fixed">
 			<h1>註冊 - 新聞推薦系統</h1>
+			<a href="index.php" data-icon="home" data-direction="reverse" class="ui-btn-right" data-ajax="false">登入</a>
 		</div>
 		<div data-role="content">
 			<script>
