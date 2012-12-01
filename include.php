@@ -18,6 +18,7 @@
 	switch($_SERVER['HTTP_HOST'])
 	{
 	case '127.0.0.1':
+	default:
 		$cfg['dbHost'] = 'localhost';
 		$cfg['dbUser'] = 'nchucsnews';
 		$cfg['dbPass'] = 't5KthfzGKpts4ctc';
@@ -26,7 +27,6 @@
 		break;
 	case '140.120.15.146':
 	case 'dmlab.cs.nchu.edu.tw':
-	default:
 		$cfg['dbHost'] = 'localhost';
 		$cfg['dbUser'] = 'newsrecommender';
 		$cfg['dbPass'] = 'news@)!@';
