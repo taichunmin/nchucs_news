@@ -44,11 +44,13 @@
 	</div>
 <?php
 	// 取得 瀏覽紀錄 分布的分類
-	$sql = "select `rid`,count(`nid`) as 'cnt' from `news` where `nid` in ($viewlogSQL) group by `rid` ";
-	$ridRes = mysql_query($sql);
-	$category = array();
-	while( $ridRow = mysql_fetch_assoc($ridRes))
-		$category[ $ridRow['rid'] ] = intval($ridRow['cnt']);
+	if($viewlogSQL != '')
+	{
+		$sql = "select `rid`,count(`nid`) as 'cnt' from `news` where `nid` in ($viewlogSQL) group by `rid` ";
+		$ridRes = mysql_query($sql);
+		$category = array();
+		while( $ridRow = mysql_fetch_assoc($ridRes))
+			$category[ $ridRow['rid'] ] = intval($ridRow['cnt']);
 ?>
 	<div data-role="collapsible" data-content-theme="d" data-theme="b">
 		<h3>取得 瀏覽紀錄 分布的分類</h3>
@@ -57,6 +59,7 @@
 	</div>
 </div>
 <?php
+	}
 //==================================================================================================
 ?>
 		</div>
