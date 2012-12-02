@@ -61,7 +61,7 @@ class similarity_C
 				else $simi[ $row['uid1'] ] = $row['simi'];
 			}
 			@mysql_free_result($res);
-			ksort($simi);
+			arsort($simi);
 			return $simi;
 		}
 		else

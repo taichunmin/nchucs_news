@@ -73,6 +73,7 @@
 		}
 		
 	}
+	die('<script>alert("更新完成。");parent.history.go(0);</script>');
 	function getCateTerm($uid)
 	{
 		// 取得瀏覽紀錄

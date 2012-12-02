@@ -53,22 +53,24 @@
 		header('Location: '.$url);
 		exit(0);
 	}
-	function tai_dbUser($name,$value=null)
+	function tai_dbUser($name,$value=null,$uid=null)
 	{
 		global $cfg,$ses;
-		if(!$ses->uid)
+		if( !isset($uid) && !$ses->uid)
 			return '未登入';
 		$name = @mysql_escape_string($name);
+		if(!isset($uid))
+			$uid = $ses->uid;
 		if(isset($value))
 		{
 			$value = @mysql_escape_string($value);
-			$sql = "update `user` set `$name`='$value' where `uid`='{$ses->uid}' limit 1";
+			$sql = "update `user` set `$name`='$value' where `uid`='$uid' limit 1";
 			tai_mysqlExec($sql);
 			return $value;
 		}
 		else
 		{
-			$sql = "select `$name` from `user` where `uid`='{$ses->uid}' limit 1";
+			$sql = "select `$name` from `user` where `uid`='$uid' limit 1";
 			if(!($res=@mysql_query($sql)) && $cfg['debug'])
 				die('Mysql error: '.mysql_error());
 			$row = mysql_fetch_assoc($res);
@@ -107,7 +109,7 @@
 		1.可以自動 include 在某個資料夾下的 *.class.php 檔案
 		2.注意 class 檔案中的任何宣告都須使用 global，才不會在 include 後消失。
 		3.有優先必要的 class，可將名字打入 order.php 檔案內，一行一個。
-*/
+	*/
 	function tai_autoIncludeClass($path)
 	{
 		if( ! is_dir($path) ) return false;
