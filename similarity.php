@@ -6,11 +6,12 @@
 		array_keys();
 		count();
 		sort();  rsort();  ksort();  krsort();
-	*//*
+	*/
+	/*
 	data->uid
 		  cid->term
 			   freq
-			*/
+	*/
 	$data = array();
 	$sql = "select `uid` from `user`";
 	$uidRes = mysql_query($sql);
@@ -38,17 +39,16 @@
 		}
 		$temp=sqrt($temp);
 		$user_termFreq[$uid] =$temp;
-		echo $temp;
-		echo '<br />';
+		//echo $temp.'<br />';
 		$temp=0;
 	}
 	foreach($userList as $index => $uid){
 		$arr_cid=$data[$uid];//第一人
 		while($arr_cid2=$data[$userList[++$index]]){//第二人
 			//Step:兩人對class的關係表
-			print_r(array_keys($arr_cid));
-			print_r(array_keys($arr_cid2));
-			echo '<br />';
+			//print_r(array_keys($arr_cid));
+			//print_r(array_keys($arr_cid2));
+			//echo '<br />';
 			$merge_cid=array_merge(array_keys($arr_cid),array_keys($arr_cid2));
 			sort($merge_cid);
 			$merge_cid=array_count_values($merge_cid);
@@ -67,15 +67,15 @@
 			if($user_termFreq[$uid]*$user_termFreq[$userList[$index]]!=0){
 				$similarity/=$user_termFreq[$uid]*$user_termFreq[$userList[$index]];
 			}
-			echo 'uid='.$uid.'跟uid='.$userList[$index].'的相似度為:';
-			echo $similarity;
-			echo '<br />';
+			//echo 'uid='.$uid.'跟uid='.$userList[$index].'的相似度為:'.$similarity.'<br />';
+			$simi->set($uid, $userList[$index], $similarity);
 			$similarity=0;
 		}
 		
 	}
 	function getCateTerm($uid)
 	{
+		// 取得瀏覽紀錄
 		$sql = "select * from `viewlog` where `uid` = '$uid'";
 		$viewRes = mysql_query($sql);
 		$view = array();
@@ -83,13 +83,18 @@
 			$view[] = $viewRow['nid'];
 		@mysql_free_result($viewRes);
 		$view = implode(',',$view);
+		// 沒有瀏覽紀錄，直接回傳空陣列
 		if($view=='') return array();
-		$sql = "select `nid`,`rid` from `news` where `nid` in ($view)";
+		
+		// 找出新聞所屬的分類
+		$sql = "select `nid`,`rid` from `news` where `nid` in ($view) order by `rid`";
 		$cvRes = mysql_query($sql);
 		$cv = array();
 		while( $cvRow = mysql_fetch_assoc($cvRes) )
 			$cv[$cvRow['rid']][] = $cvRow['nid'];
 		@mysql_free_result($cvRes);
+		
+		// 利用分類下的新聞，取得所有的關鍵字
 		$res = array();
 		foreach( $cv as $cate => $cnids )
 		{
@@ -100,7 +105,6 @@
 				$res[intval($cate)][ intval($termRow['wid']) ] = intval($termRow['cnt']);
 			@mysql_free_result($termRes);
 		}
-		ksort($res);
 		return $res;
 	}
 ?>
