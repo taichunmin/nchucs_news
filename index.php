@@ -83,6 +83,11 @@ else	// 已登入，顯示功能選單
 						推薦1<br />測試
 					</a>
 				</div>
+				<div class="ui-block-a">
+					<a data-role="button" href="word.php">
+						關鍵字<br />排行
+					</a>
+				</div>
 			</div>
 		</div>
 <?php
