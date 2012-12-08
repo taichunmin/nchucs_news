@@ -56,6 +56,13 @@
 			<a href="index.php" data-icon="home" data-direction="reverse" class="ui-btn-right" data-ajax="false">登入</a>
 		</div>
 		<div data-role="content">
+			<?php
+				if($ses->hasMsg())
+				{
+					echo '<script>alert(\''. $ses->msg() .'\');</script>';
+					$ses->clearMsg();
+				}
+			?>
 			<script>
 			$('#register').bind('pageinit', function(event) {
 				$('#form_register').validate({

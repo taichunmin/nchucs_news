@@ -3,19 +3,10 @@
 	include_once("header.php");
 	if(!$ses->uid) tai_location('index.php');
 	
+	if( isset($_GET['uid']) && is_numeric($_GET['uid']) ) 
+		$uid = $_GET['uid'];
+	else $uid = $ses->uid;
 	$cfg['sevenDay'] = date('Y-m-d',time()-7*24*60*60);
-	
-	function tai_viewlogByUid()
-	{
-		global $cfg,$ses;
-		$sql = "select * from `viewlog` where `uid`='{$ses->uid}' and `view_t`>'{$cfg['sevenDay']}'";
-		$res = mysql_query($sql);
-		$view = array();
-		while( $row = mysql_fetch_assoc($res) )
-			$view[] = $row['nid'];
-		@mysql_free_result($res);
-		return $view;
-	}
 ?>
 	<div data-role="page" id="-<?php echo $_GET['act']; ?>" data-add-back-btn="true">
 		<div data-role="header" data-position="fixed">
@@ -24,6 +15,13 @@
 <?php echo $pagenav; ?>
 		</div>
 		<div data-role="content">
+			<?php
+				if($ses->hasMsg())
+				{
+					echo '<script>alert(\''. $ses->msg() .'\');</script>';
+					$ses->clearMsg();
+				}
+			?>
 <?php
 //==================================================================================================
 ?>
@@ -34,11 +32,11 @@
 	</style>
 	<div data-role="collapsible" data-content-theme="d" data-theme="b">
 		<h3>取得目前的登入資訊</h3>
-		<p>目前以 <?php echo tai_dbUser('name'); ?>（UID = <?php echo $ses->uid; ?>）登入。</p>
+		<p>目前以 <?php echo tai_dbUser('name',NULL,$uid); ?>（UID = <?php echo $uid; ?>）登入。</p>
 	</div>
 <?php
 	// 取得相似度列表
-	$simiArry = $simi->get($ses->uid);
+	$simiArry = $simi->get($uid);
 	$simiUser = array();
 	foreach($simiArry as $k => $v)
 		if($simiUser['simi']<$v && $v!=0)
@@ -62,13 +60,13 @@
 		<?php } ?>
 		</table>
 		<p>相似度最高者：<?=tai_dbUser('name',NULL,$simiUser['uid'])?>（UID = <?=$simiUser['uid']?>）</p>
-		<p>註：相似度並非即時更新，若要更新<a href="similarity.php" target="similarityUpdate" data-role="button" data-icon="refresh" data-inline="true" data-mini="true" >請按此</a><iframe style="width:0; height:0" id="similarityUpdate" ></iframe></p>
+		<p>註：相似度並非即時更新，若要更新<a href="similarity.php?reload=1" target="similarityUpdate" data-role="button" data-icon="refresh" data-inline="true" data-mini="true" >請按此</a><iframe style="width:0; height:0" id="similarityUpdate" ></iframe></p>
 	</div>
 <?php
 	if(!empty($simiUser))
 	{
 		// 取得自己讀過的文章與相似者的差異
-		$sql = "select a.* from ( select `nid`,`view_t` from `viewlog` where `uid` = {$simiUser['uid']} ) as a left join ( select `nid`,`view_t` from `viewlog` where `uid` = {$ses->uid} ) as b on a.`nid` = b.`nid` where b.`nid` is null order by `view_t` desc limit 100";
+		$sql = "select a.* from ( select `nid`,`view_t` from `viewlog` where `uid` = {$simiUser['uid']} ) as a left join ( select `nid`,`view_t` from `viewlog` where `uid` = {$uid} ) as b on a.`nid` = b.`nid` where b.`nid` is null order by `view_t` desc limit 100";
 		$rcmdRes = mysql_query($sql);
 		$rcmd = array();
 		while( $rcmdRow = mysql_fetch_assoc($rcmdRes) )

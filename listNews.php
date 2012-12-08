@@ -15,6 +15,13 @@
 <?php echo $pagenav; ?>
 		</div>
 		<div data-role="content">
+			<?php
+				if($ses->hasMsg())
+				{
+					echo '<script>alert(\''. $ses->msg() .'\');</script>';
+					$ses->clearMsg();
+				}
+			?>
 <?php
 //==================================================================================================
 switch($_GET['act'])

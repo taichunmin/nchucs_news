@@ -39,6 +39,13 @@ if( !$ses->uid ) { // 未登入，顯示登入的表單。
 			<a href="index.php" data-icon="home" data-iconpos="notext" data-direction="reverse" class="ui-btn-right">Home</a>
 		</div>
 		<div data-role="content">
+			<?php
+				if($ses->hasMsg())
+				{
+					echo '<script>alert(\''. $ses->msg() .'\');</script>';
+					$ses->clearMsg();
+				}
+			?>
 			<form method="post" action="index.php" data-ajax="false">
 				<label for="name">使用者名稱</label>
 				<input type="email" name="email" value="" tabindex="1" />
@@ -66,25 +73,32 @@ else	// 已登入，顯示功能選單
 <?php echo $pagenav; ?>
 		</div>
 		<div data-role="content">
+			<?php
+				if($ses->hasMsg())
+				{
+					$pagenav .= '<script>alert(\''. $ses->msg() .'\');</script>';
+					$ses->clearMsg();
+				}
+			?>
 			<p><?php echo tai_dbUser('name'); ?>，歡迎回來</p>
 			<div class="ui-grid-b">
 				<div class="ui-block-a">
-					<a data-role="button" href="listNews.php?act=groupByDate">
+					<a data-role="button" href="listNews.php?act=groupByDate" data-theme="b">
 						依日期<br />看新聞
 					</a>
 				</div>
 				<div class="ui-block-b">
-					<a data-role="button" href="listNews.php?act=groupByCategory">
+					<a data-role="button" href="listNews.php?act=groupByCategory" data-theme="b">
 						依分類<br />看新聞
 					</a>
 				</div>
 				<div class="ui-block-c">
-					<a data-role="button" href="recommand1.php">
+					<a data-role="button" href="recommand1.php" data-theme="b">
 						推薦1<br />測試
 					</a>
 				</div>
 				<div class="ui-block-a">
-					<a data-role="button" href="word.php">
+					<a data-role="button" href="word.php" data-theme="b">
 						關鍵字<br />排行
 					</a>
 				</div>

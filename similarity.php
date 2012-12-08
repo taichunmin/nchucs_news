@@ -67,13 +67,13 @@
 			if($user_termFreq[$uid]*$user_termFreq[$userList[$index]]!=0){
 				$similarity/=$user_termFreq[$uid]*$user_termFreq[$userList[$index]];
 			}
-			//echo 'uid='.$uid.'跟uid='.$userList[$index].'的相似度為:'.$similarity.'<br />';
+			echo 'uid='.$uid.'跟uid='.$userList[$index].'的相似度為:'.$similarity.'<br />';
 			$simi->set($uid, $userList[$index], $similarity);
 			$similarity=0;
 		}
 		
 	}
-	die('<script>alert("更新完成。");parent.history.go(0);</script>');
+	die('<script>alert("更新完成。");'.(($_GET['reload']==1)?'parent.history.go(0);':'').'</script>');
 	function getCateTerm($uid)
 	{
 		// 取得瀏覽紀錄

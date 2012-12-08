@@ -9,12 +9,18 @@
 ?>
 	<div data-role="page" id="-<?php echo $_GET['act']; ?>" data-add-back-btn="true">
 		<div data-role="header" data-position="fixed">
-			<a href="index.php" data-icon="grid">選單</a>
 			<h1><?php echo $title[$_GET['act']]; ?></h1>
 			<a href="index.php?act=logout" data-icon="alert" data-direction="reverse" class="ui-btn-right" data-ajax="false">登出</a>
 <?php echo $pagenav; ?>
 		</div>
 		<div data-role="content">
+			<?php
+				if($ses->hasMsg())
+				{
+					echo '<script>alert(\''. $ses->msg() .'\');</script>';
+					$ses->clearMsg();
+				}
+			?>
 <?php
 //==================================================================================================
 //==================================================================================================
