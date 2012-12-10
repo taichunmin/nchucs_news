@@ -94,7 +94,7 @@ else	// 已登入，顯示功能選單
 				</div>
 				<div class="ui-block-c">
 					<a data-role="button" href="recommand1.php" data-theme="b">
-						推薦1<br />測試
+						相似度<br />推薦展示
 					</a>
 				</div>
 				<div class="ui-block-a">

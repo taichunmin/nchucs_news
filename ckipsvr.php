@@ -94,7 +94,7 @@ XML;
 		$sql = "insert into `word_tmp$rand`(`value`,`count`) values ".implode(",",$ckipins)."";
 		tai_mysqlExec($sql);
 		// 新增沒有出現過的 word
-		$sql = "insert into `word` (`val`) select `value` from `word_tmp$rand` where not exists (select * from `word` where `val`=`value`) and not exists (select * from `word_ban` where `val`=`value`)";
+		$sql = "insert into `word` (`val`) select `value` from `word_tmp$rand` where not exists (select * from `word` where `val`=`value`)";
 		tai_mysqlExec($sql);
 		// 紀錄新聞中出現過的詞
 		$sql = "insert into `news2word` (`nid`,`wid`,`cnt`) select '{$news['nid']}',(select `wid` from `word` where `val`=`value` limit 1 ),`count` from `word_tmp$rand`";
