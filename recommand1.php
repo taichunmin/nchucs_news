@@ -10,7 +10,7 @@
 ?>
 	<div data-role="page" id="-<?php echo $_GET['act']; ?>" data-add-back-btn="true">
 		<div data-role="header" data-position="fixed">
-			<h1>推薦測試</h1>
+			<h1>相似度推薦展示</h1>
 			<a href="index.php?act=logout" data-icon="alert" data-direction="reverse" class="ui-btn-right" data-ajax="false">登出</a>
 <?php echo $pagenav; ?>
 		</div>
@@ -54,7 +54,7 @@
 			</tr>
 		<?php foreach($simiArry as $k => $v) { ?>
 			<tr>
-				<th><?=tai_dbUser('name',NULL,$k)?></th>
+				<th><a href="?uid=<?=$k?>"><div><?=tai_dbUser('name',NULL,$k)?></div></a></th>
 				<td><?=$v?></td>
 			</tr>
 		<?php } ?>

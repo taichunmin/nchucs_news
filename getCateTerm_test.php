@@ -18,7 +18,7 @@
 		foreach( $cv as $cate => $cnids )
 		{
 			$cnids = implode(',',$cnids);
-			$sql = "select `wid`,sum(`cnt`) as 'cnt' from `news2word` where `nid` in ($cnids) group by `wid`";
+			$sql = "select a.`wid`,sum(`cnt`) as 'cnt' from `news2word` as a left join `word` as b on a.`wid`=b.`wid` where b.`ban`=0 and `nid` in ($cnids) group by `wid`";
 			$termRes = mysql_query($sql);
 			while( $termRow = mysql_fetch_assoc($termRes) )
 				$res[$cate][ $termRow['wid'] ] = $termRow['cnt'];

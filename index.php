@@ -81,7 +81,7 @@ else	// 已登入，顯示功能選單
 				}
 			?>
 			<p><?php echo tai_dbUser('name'); ?>，歡迎回來</p>
-			<div class="ui-grid-b">
+			<div class="ui-grid-a">
 				<div class="ui-block-a">
 					<a data-role="button" href="listNews.php?act=groupByDate" data-theme="b">
 						依日期<br />看新聞
@@ -92,12 +92,12 @@ else	// 已登入，顯示功能選單
 						依分類<br />看新聞
 					</a>
 				</div>
-				<div class="ui-block-c">
+				<div class="ui-block-a">
 					<a data-role="button" href="recommand1.php" data-theme="b">
 						相似度<br />推薦展示
 					</a>
 				</div>
-				<div class="ui-block-a">
+				<div class="ui-block-b">
 					<a data-role="button" href="word.php" data-theme="b">
 						關鍵字<br />排行
 					</a>
