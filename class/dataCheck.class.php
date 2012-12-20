@@ -4,6 +4,7 @@
 	
 	版本：
 		2012/08/09		taichunmin		初版，debug 未完成
+		2012/12/20		taichunmin		模仿 jQuery Vaildate 修改程式
 	
 	用途：
 		資料檢查。
@@ -16,14 +17,15 @@
 	class dataCheck_C
 	{
 		private $pattern = array(
-			'email' => '/^[\w.]+@[\w.]+(\.[\w.]+)+$/',
-			'int' => '/^(\+|-)?\d+$/',
-			'uint' => '/^\+?\d+$/',
-			'double' => '/^(\+|-)?\d+(?:\.\d*)?$/',
-			'udouble' => '/^\+?\d+(?:\.\d*)?$/',
-			'date' => '/^(19|20)\d{2}-(0?[1-9]|1[0-2])-(0?[1-9]|[1-2][0-9]|3[0-1])$/',
-			'url' => '/^(http|https|ftp)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?\/?([a-zA-Z0-9\-\._\?\,\'\/\\\+&%\$#\=~])*[^\.\,\)\(\s]$/',
-			'username' => '/^[\w.]+$/',
+			'required' => '/^.*$/us',
+			'email' => '/^[\w.]+@[\w.]+(\.[\w.]+)+$/us',
+			'int' => '/^(\+|-)?\d+$/us',
+			'uint' => '/^\+?\d+$/us',
+			'double' => '/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/us',
+			'udouble' => '/^\+?\d+(?:\.\d*)?$/us',
+			'dateISO' => '/^\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}$/us',
+			'url' => '/^(http|https|ftp)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?\/?([a-zA-Z0-9\-\._\?\,\'\/\\\+&%\$#\=~])*[^\.\,\)\(\s]$/us',
+			'username' => '/^[\w.]+$/us',
 		);
 		private $debug;
 		
@@ -42,16 +44,36 @@
 		
 		public function __call($k, $args)
 		{
-			if(! $this->__isset($k))	// 沒有該規則，直接回傳 null
-				return null;
-			$res = true;
-			foreach($args as $v)
-				if( !@preg_match($this->pattern[$k], $v) )
-				{
-					$res = false;
-					break;
-				}
-			return $res;
+			$preg_check = true;
+			$ret = false;
+			switch($k)
+			{
+			case 'minlength':
+				if(! $this->uint($args[1]) ) die('$k args error!');
+				$this->__set('minlength','/^.{'.$args[1].',}$/us');
+				break;
+			case 'maxlength':
+				if(! $this->uint($args[1]) ) die('$k args error!');
+				$this->__set('maxlength','/^.{,'.$args[1].'}$/us');
+				break;
+			case 'rangelength':
+				if( ! $this->uint($args[1]) || !$this->uint($args[2]) ) die('$k args error!');
+				$this->__set('rangelength','/^.{'.$args[1].','.$args[2].'}$/us');
+				break;
+			case 'min':
+				if(!$this->int($args[1])) die('$k args error!');
+				return $this->int($args[0]) && $args[0]>=$args[1];		// 直接回傳
+			case 'max':
+				if(!$this->int($args[1])) die('$k args error!');
+				return $this->int($args[0]) && $args[0]<=$args[1];		// 直接回傳
+			case 'range':
+				if( ! $this->uint($args[1]) || !$this->uint($args[2]) ) die('$k args error!');
+				return $this->int($args[0]) && $args[0]>=$args[1] && $args[0]<=$args[2];		// 直接回傳
+			case 'date':
+				return strtotime($args[0]) !== false;
+			}
+			if(! $this->__isset($k)) return null;	// 沒有該規則，直接回傳 null
+			return @preg_match($this->pattern[$k], $v);
 		}
 		
 		public function __set($k, $v)

@@ -80,7 +80,7 @@ else	// 已登入，顯示功能選單
 					$ses->clearMsg();
 				}
 			?>
-			<p><?php echo tai_dbUser('name'); ?>，歡迎回來</p>
+			<p style="text-align:center"><?php echo tai_dbUser('name'); ?>，歡迎回來</p>
 			<div class="ui-grid-a">
 				<div class="ui-block-a">
 					<a data-role="button" href="listNews.php?act=groupByDate" data-theme="b">

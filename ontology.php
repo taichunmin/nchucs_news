@@ -63,28 +63,27 @@
 	//資料preset
 	$classSelect=5;
 	$termSelect=5;
-	//最後輸出格式
-	$result=array();
 	/*演算法開始*/
 	foreach($data as $uid => $cid_list){
 		/*Step1：新建一個使用者CLASS的權重表=>加總選定的CLASS的新聞總數=>標準化*/
 		arsort($cid_list['count_nid']);//如果資料抓出來就有遞減排序，可刪
 		$cid_weight_list=array_slice($cid_list['count_nid'],0,$classSelect,true);
-		//print_r($cid_weight_list);
+		//print_r($cid_weight_list);//測試輸出使用者排名前$classSelect的類別
 		$sum_nid=array_sum($cid_weight_list);
 		$cid_tid_weight=array();
 		foreach($cid_weight_list as $cid => $weight){
 			$cid_weight_list[$cid]/=$sum_nid;
-			
 			/*Step2：新建term的權重表=>加總CLASS下的freq總數=>標準化*/
 			arsort($cid_list['tf_list'][$cid]);//如果資料抓出來就有遞減排序，可刪
-			
 			$cid_tid_weight[$cid]=array_slice($cid_list['tf_list'][$cid],0,$termSelect,true);
+			//print_r($cid_tid_weight[$cid]);//測試輸出使用者類別下排名前$termSelect的詞
 			$sum_freq=array_sum($cid_tid_weight[$cid]);
 			foreach($cid_tid_weight[$cid] as $tid => $freq){
-				$cid_tid_weight[$cid][$tid]/=$sum_freq;
-				//兩項表不先相乘，等HIT在乘，盡可能減少運算空間
-			}//一個類的權重表完成
+				$cid_tid_weight[$cid][$tid]/=$sum_freq;//兩項表不先相乘，等HIT在乘，盡可能減少運算空間
+			}//跳出=>該類的詞權重表完成
+			/*echo 'uid='.$uid.'cid='.$cid.'的詞權重表：'; 
+			print_r($cid_tid_weight[$cid]);
+			echo '<br />'; /**/
 			/*Step：比較新進新聞*/
 			foreach($new[$cid] as $nid =>$tf_list){
 				if($intersect=array_intersect_key($tf_list,$cid_tid_weight[$cid])){
@@ -93,26 +92,17 @@
 					foreach($intersect as $tid =>$freq){
 						$result[$uid][$nid]+=$freq*$cid_tid_weight[$cid][$tid]*$cid_weight_list[$cid];
 					}
-					
 				}
-				print_r($nid);
-				echo '<br />'; 
-				print_r($intersect);
-				echo '<br />'; /**/
 			}//一個類別的新進新聞被比對完
-		}
-		arsort($result[$uid]);
-		echo '<br />';
-		print_r($result[$uid]);
-		echo '<br />';/**/
-		//印出該使用者的兩項權重表
-		
-		/*echo '運算完的類別權重：';
+		}//跳出=>該使用者類別的權重表完成
+		/*echo 'uid='.$uid.'的類別權重表：'; 
 		print_r($cid_weight_list);
 		echo '<br />'; /**/
-		/*echo '運算完的字詞權重：';
-		print_r($cid_tid_weight);
-		echo '<br />';/**/
+		arsort($result[$uid]);//不可刪
+		/*echo 'uid='.$uid.'的新進新聞權重表：';
+		echo '<br />'; 
+		print_r($result[$uid]);
+		echo '<br />'; /**/
 	}
-	print_r($result);
+	print_r($result);//result=array(uid=>array(nid=>weight))
 ?>
