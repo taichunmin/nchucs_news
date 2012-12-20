@@ -63,22 +63,6 @@
 					$ses->clearMsg();
 				}
 			?>
-			<script>
-			$('#register').bind('pageinit', function(event) {
-				$('#form_register').validate({
-					rules: {
-						email: "required email",
-						pass: "required",
-						pass2: {
-							equalTo: "input[name=pass]"
-						},
-						name: "required",
-						birth: "required dateISO",
-						gender: "required"
-					}
-				});
-			});
-			</script>
 			<style>
 				label.error {
 						color: red;
@@ -101,11 +85,16 @@
 				em { color: red; font-weight: bold; padding-right: .25em; }
 			</style>
 			<form action="register.php" method="post" id="form_register" data-ajax="false">
-				<label>電子郵件<input type="email" name="email" value="<?php echo $_POST['email']; ?>" /></label>
-				<label>密碼<input type="password" name="pass" value="" /></label>
-				<label>確認密碼<input type="password" name="pass2" value="" /></label>
-				<label>姓名<input type="text" name="name" value="<?php echo $_POST['name']; ?>" /></label>
-				<label>生日<input type="date" name="birth" value="<?php echo $_POST['birth']; ?>" /></label>
+				<label for="email">電子郵件</label>
+				<input type="email" name="email" id="email" value="<?php echo $_POST['email']; ?>" />
+				<label for="pass">密碼</label>
+				<input type="password" name="pass" id="pass" value="" />
+				<label for="pass2">確認密碼</label>
+				<input type="password" name="pass2" id="pass2" value="" />
+				<label for="name">姓名</label>
+				<input type="text" name="name" id="name" value="<?php echo $_POST['name']; ?>" />
+				<label for="birth">生日</label>
+				<input type="date" name="birth" id="birth" value="<?php echo $_POST['birth']; ?>" />
 				<div class="ui-grid-a">
 					<div class="ui-block-a">性別</div>
 					<div class="ui-block-b">

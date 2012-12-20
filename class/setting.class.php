@@ -39,6 +39,7 @@ class setting_C
 	}
 	public function post()
 	{
+		global $dck;
 		if(!isset($this->d)) return ;
 		foreach($_POST as $k => $v)
 		{
@@ -48,7 +49,7 @@ class setting_C
 			case 'simi_2st':
 			case 'simi_3st':
 				if($dck->uint($v))
-					$this->d[$k] = $v;
+					$this->__set($k,array(intval($v)));
 				break;
 			}
 		}
@@ -66,6 +67,8 @@ class setting_C
 	{
 		if(!isset($this->d)) return ;
 		$this->d[$k] = $args[0];
+		if($this->d[$k] == $this->defau[$k])
+			unset($this->d[$k]);
 	}
 	public function __isset($k)
 	{

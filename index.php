@@ -86,20 +86,22 @@ else	// 已登入，顯示功能選單
 					<a data-role="button" href="listNews.php?act=groupByDate" data-theme="b">
 						依日期<br />看新聞
 					</a>
+					<a data-role="button" href="recommand1.php" data-theme="b">
+						相似度<br />推薦展示
+					</a>
+					<a data-role="button" href="profile.php" data-theme="b" data-ajax="false">
+						個人資料<br />修改
+					</a>
 				</div>
 				<div class="ui-block-b">
 					<a data-role="button" href="listNews.php?act=groupByCategory" data-theme="b">
 						依分類<br />看新聞
 					</a>
-				</div>
-				<div class="ui-block-a">
-					<a data-role="button" href="recommand1.php" data-theme="b">
-						相似度<br />推薦展示
-					</a>
-				</div>
-				<div class="ui-block-b">
 					<a data-role="button" href="word.php" data-theme="b">
 						關鍵字<br />排行
+					</a>
+					<a data-role="button" href="setting.php" data-theme="b">
+						<div style="line-height:40px">設定</div>
 					</a>
 				</div>
 			</div>

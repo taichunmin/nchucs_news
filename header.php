@@ -10,6 +10,7 @@
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
 		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
 		<script src="js/jquery.validate.min.js"></script>
+		<script src="script.js"></script>
 		<script src="js/messages_zh_TW.js"></script>
 <?php
 	$pagenav = <<<navSTR
@@ -18,7 +19,7 @@
 					<li><a data-theme="b" href="index.php">功能選單</a></li>
 					<li><a data-theme="b" href="">今日推薦</a></li>
 					<li><a data-theme="b" href="profile.php" data-ajax="false">個人資料</a></li>
-					<li><a data-theme="b" href="">設定</a></li>
+					<li><a data-theme="b" href="setting.php">設定</a></li>
 				</ul>
 			</div>
 navSTR;

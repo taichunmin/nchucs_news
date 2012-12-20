@@ -58,21 +58,6 @@
 					$ses->clearMsg();
 				}
 			?>
-			<script>
-			$('#profile').bind('pageinit', function(event) {
-				$('#form_modify').validate({
-					rules: {
-						pass: "required",
-						pass2: {
-							equalTo: "input[name=pass1]"
-						},
-						name: "required",
-						birth: "required dateISO",
-						gender: "required"
-					}
-				});
-			});
-			</script>
 			<style>
 				label.error {
 						color: red;

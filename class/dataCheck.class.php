@@ -18,7 +18,7 @@
 	{
 		private $pattern = array(
 			'required' => '/^.*$/us',
-			'email' => '/^[\w.]+@[\w.]+(\.[\w.]+)+$/us',
+			'email' => '/^[\w.]+@[\w.]+(\.[\w.]+)+$/',
 			'int' => '/^(\+|-)?\d+$/us',
 			'uint' => '/^\+?\d+$/us',
 			'double' => '/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/us',
@@ -44,8 +44,6 @@
 		
 		public function __call($k, $args)
 		{
-			$preg_check = true;
-			$ret = false;
 			switch($k)
 			{
 			case 'minlength':
@@ -73,7 +71,7 @@
 				return strtotime($args[0]) !== false;
 			}
 			if(! $this->__isset($k)) return null;	// 沒有該規則，直接回傳 null
-			return @preg_match($this->pattern[$k], $v);
+			return @preg_match($this->pattern[$k], $args[0]);
 		}
 		
 		public function __set($k, $v)
@@ -103,13 +101,12 @@
 	$dck = new dataCheck_C;
 /*
 	debug
-	echo intval($dck->email('taichunmin@gmail.com','a@b.c'));
+	echo intval($dck->email('taichunmin@gmail.com'));
 	echo intval($dck->email('taichunmingmail.com'));
 	echo intval($dck->double('-123.456'));
 	echo intval($dck->url('http://taichunmin.pixnet.net/blog'));
 	echo $dck->username = '/^[\w._]+$/';
 	echo $dck->username('tai.chunmin');
 	echo $dck->debug();
-	echo $dck->debug('debug');
 */
 ?>
