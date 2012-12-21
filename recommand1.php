@@ -30,7 +30,7 @@
 		table.viewTab{ width: 100%; border-collapse: collapse; }
 		table.viewTab th, table.viewTab td{ border: 1px solid #000; }
 	</style>
-	<div data-role="collapsible" data-content-theme="d" data-theme="b">
+	<div data-role="collapsible" data-collapsed="false" data-content-theme="d" data-theme="b">
 		<h3>取得目前的登入資訊</h3>
 		<p>目前以 <?php echo tai_dbUser('name',NULL,$uid); ?>（UID = <?php echo $uid; ?>）登入。</p>
 	</div>
@@ -38,12 +38,12 @@
 	// 取得相似度列表
 	$simiArry = $simi->get($uid);
 	$simiUser = array();
-	foreach($simiArry as $k => $v)
-		if($simiUser['simi']<$v && $v!=0)
-		{
-			$simiUser['uid'] = $k;
-			$simiUser['simi'] = $v;
-		}
+	foreach( array_keys($simiArry) as $i => $k )
+	{
+		if($i>=3) break;
+		if( $simiArry[$k] > 0.00001 )
+			$simiUser[] = $k;
+	}
 ?>
 	<div data-role="collapsible" data-content-theme="d" data-theme="b">
 		<h3>取得相似度列表</h3>
@@ -59,14 +59,26 @@
 			</tr>
 		<?php } ?>
 		</table>
-		<p>相似度最高者：<?=tai_dbUser('name',NULL,$simiUser['uid'])?>（UID = <?=$simiUser['uid']?>）</p>
+		<?php
+		if(isset($simiUser[0])) echo '<p>第①相似者：'.tai_dbUser('name',NULL,$simiUser[0]).'（UID = '.$simiUser[0].'）</p>';
+		if(isset($simiUser[1])) echo '<p>第②相似者：'.tai_dbUser('name',NULL,$simiUser[1]).'（UID = '.$simiUser[1].'）</p>';
+		if(isset($simiUser[2])) echo '<p>第③相似者：'.tai_dbUser('name',NULL,$simiUser[2]).'（UID = '.$simiUser[2].'）</p>';
+		?>
 		<p>註：相似度並非即時更新，若要更新<a href="similarity.php?reload=1" target="similarityUpdate" data-role="button" data-icon="refresh" data-inline="true" data-mini="true" >請按此</a><iframe style="width:0; height:0" id="similarityUpdate" ></iframe></p>
 	</div>
 <?php
-	if(!empty($simiUser))
+	if(count($simiUser)>0)
 	{
 		// 取得自己讀過的文章與相似者的差異
-		$sql = "select a.* from ( select `nid`,`view_t` from `viewlog` where `uid` = {$simiUser['uid']} ) as a left join ( select `nid`,`view_t` from `viewlog` where `uid` = {$uid} ) as b on a.`nid` = b.`nid` where b.`nid` is null order by `view_t` desc limit 100";
+		$rand = rand(0,255);
+		$sql = "CREATE TEMPORARY TABLE `reco1_$rand` (`nid` int(11) NOT NULL,`view_t` timestamp NOT NULL)";
+		tai_mysqlExec($sql);
+		foreach( $simiUser as $k => $v )
+		{
+			$sql = "insert into `reco1_$rand` select a.* from ( select `nid`,`view_t` from `viewlog` where `uid` = {$v} ) as a left join ( select `nid`,`view_t` from `viewlog` where `uid` = {$uid} ) as b on a.`nid` = b.`nid` where b.`nid` is null order by `view_t` desc limit ".($stt->{'simi_'.($k+1).'st'});
+			tai_mysqlExec($sql);
+		}
+		$sql = "select distinct `nid`,`view_t` from `reco1_$rand` order by `view_t`";
 		$rcmdRes = mysql_query($sql);
 		$rcmd = array();
 		while( $rcmdRow = mysql_fetch_assoc($rcmdRes) )
