@@ -64,7 +64,7 @@
 		if(isset($simiUser[1])) echo '<p>第②相似者：'.tai_dbUser('name',NULL,$simiUser[1]).'（UID = '.$simiUser[1].'）</p>';
 		if(isset($simiUser[2])) echo '<p>第③相似者：'.tai_dbUser('name',NULL,$simiUser[2]).'（UID = '.$simiUser[2].'）</p>';
 		?>
-		<p>註：相似度並非即時更新，若要更新<a href="similarity.php?reload=1" target="similarityUpdate" data-role="button" data-icon="refresh" data-inline="true" data-mini="true" >請按此</a><iframe style="width:0; height:0" id="similarityUpdate" ></iframe></p>
+		<p>註：相似度並非即時更新，若要更新<a href="similarity.php" target="similarityUpdate" data-role="button" data-icon="refresh" data-inline="true" data-mini="true" onclick="alert('更新成功後會自動重新整理'); $('#similarityUpdate').one('load',function(){ history.go(0); });" >請按此</a><iframe style="width:0; height:0" id="similarityUpdate" ></iframe></p>
 	</div>
 <?php
 	if(count($simiUser)>0)

@@ -4,7 +4,7 @@
 	include_once("header.php");
 	if(!$ses->uid) tai_location('index.php');
 	
-	$cfg['sevenDay'] = date('Y-m-d',time()-7*24*60*60);
+	$cfg['yesterday'] = date('Y-m-d',time()-24*60*60);
 	
 	function tai_viewlogByUid()
 	{
@@ -18,13 +18,13 @@
 		return $view;
 	}
 ?>
-	<div data-role="page" id="-<?php echo $_GET['act']; ?>" data-add-back-btn="true">
+	<div data-role="page" id="ontology" data-add-back-btn="true">
 	<style>
 		table.viewTab{ width: 100%; border-collapse: collapse; }
 		table.viewTab th, table.viewTab td{ border: 1px solid #000; }
 	</style>
 		<div data-role="header" data-position="fixed">
-			<h1>推薦測試</h1>
+			<h1>Ontology 推薦展示</h1>
 			<a href="index.php?act=logout" data-icon="alert" data-direction="reverse" class="ui-btn-right" data-ajax="false">登出</a>
 <?php echo $pagenav; ?>
 		</div>
@@ -38,43 +38,78 @@
 			?>
 <?php
 //==================================================================================================
+if(isset($_GET['uid']))
+	$uid = $_GET['uid'];
+else $uid = $ses->uid;
 ?>
 <div data-role="collapsible-set">
+	<style>
+		table.viewTab{ width: 100%; border-collapse: collapse; }
+		table.viewTab th, table.viewTab td{ border: 1px solid #000; }
+	</style>
 	<div data-role="collapsible" data-content-theme="d" data-theme="b">
 		<h3>取得目前的登入資訊</h3>
-		<p>目前以 <?php echo tai_dbUser('name'); ?> (UID: <?php echo $ses->uid; ?>) 登入。</p>
+		<p>目前以 <?php echo tai_dbUser('name',NULL,$uid); ?> (UID: <?php echo $uid; ?>) 登入。</p>
 	</div>
 <?php
-	// 取得瀏覽紀錄
-	$viewlog = tai_viewlogByUid();
-	$viewlogSQL = implode(',',$viewlog);
+	// 取得推薦統計
+	$sql = "select `uid`,count(`nid`) as 'cnt' from `ontology` where `date` = '{$cfg['yesterday']}' group by `uid`";
+	$analyRes = mysql_query($sql);
 ?>
 	<div data-role="collapsible" data-content-theme="d" data-theme="b">
-		<h3>取得瀏覽紀錄</h3>
-		<p>您擁有 <?php echo count($viewlog); ?> 筆瀏覽紀錄。</p>
-	</div>
-<?php
-	// 取得 瀏覽紀錄 分布的分類
-	$nidbyrid = array();
-	if($viewlogSQL != '')
-	{
-		$sql = "select `rid`,`nid` from `news` where `nid` in ($viewlogSQL)";
-		$ridRes = mysql_query($sql);
-		while( $ridRow = mysql_fetch_assoc($ridRes))
-			$nidbyrid[ $ridRow['rid'] ][] = $ridRow['nid'];
-?>
-	<div data-role="collapsible" data-content-theme="d" data-theme="b">
-		<h3>取得 瀏覽紀錄 分布的分類</h3>
-		<p>您瀏覽過 <?php echo count($nidbyrid); ?> 個分類。</p>
+		<h3>Ontology 推薦統計</h3>
 		<table class="viewTab">
-			<tr><th>分類ID</th><th>閱讀數量</th></tr>
+			<tr>
+				<th>使用者</th>
+				<th>推薦數量 (最大 100)</th>
+			</tr>
+		<?php while($analyRow = mysql_fetch_assoc($analyRes)) { ?>
+			<tr>
+				<th><a href="?uid=<?=$analyRow['uid']?>"><?=tai_dbUser('name',NULL,$analyRow['uid'])?></th>
+				<th><?=$analyRow['cnt']?></th>
+			</tr>
+		<?php } mysql_free_result($analyRes); ?>
+		</table>
+		<p>註：Ontology 推薦並非即時更新，若要更新<a href="ontology.php?date=<?=$cfg['yesterday']?>" target="ontologyUpdate" data-role="button" data-icon="refresh" data-inline="true" data-mini="true" onclick="alert('更新成功後會自動重新整理'); $('#ontologyUpdate').one('load',function(){ history.go(0); });" >請按此</a><iframe style="width:0; height:0" id="ontologyUpdate" ></iframe></p>
+	</div>
+<?php
+	// 取得 推薦紀錄
+	$sql = "select * from `ontology` where `uid` = '$uid'";
+	$ontoRes = mysql_query($sql);
+	$ontology = array();
+?>
+	<div data-role="collapsible" data-content-theme="d" data-theme="b">
+		<h3>Ontology 推薦詳細資料</h3>
+		<table class="viewTab">
+			<tr>
+				<th>新聞 ID</th>
+				<th>推薦權重</th>
+			</tr>
 		<?php 
-		foreach($nidbyrid as $k => $v)
-			echo '<tr><td>'.$k.'</td><td>'.count($v).'</td></tr>';
+		while($ontoRow = mysql_fetch_assoc($ontoRes))
+		{
+			$ontology[] = $ontoRow['nid'];
 		?>
+			<tr>
+				<th><?=$ontoRow['nid']?></th>
+				<th><?=$ontoRow['weight']?></th>
+			</tr>
+		<?php } mysql_free_result($ontoRes); ?>
 		</table>
 	</div>
-<?php } ?>
+<?php
+	// 過濾使用者看過的新聞
+	$sql = "select a.`nid`,`title`,`news_t` from `news` as a left join `viewlog` as b on a.`nid` = b.`nid` where a.`nid` in (".implode(',',$ontology).") and b.`nid` is null limit ".$stt->onto_limit;
+	$rcmdRes = mysql_query($sql);
+?>
+	<div data-role="collapsible" data-content-theme="d" data-theme="b">
+		<h3>Ontology 推薦</h3>
+		<ul data-role="listview" data-filter="true">
+		<?php while($rcmdRow = mysql_fetch_assoc($rcmdRes)) { ?>
+			<li><a href="news.php?nid=<?=$rcmdRow['nid']?>}"><h3><?=$rcmdRow['title']?></h3><p><?=$rcmdRow['news_t']?></p></a></li>
+		<?php } mysql_free_result($rcmdRes);?>
+		</ul>
+	</div>
 </div>
 <?php
 //==================================================================================================

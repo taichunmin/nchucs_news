@@ -13,6 +13,7 @@ class setting_C
 		'simi_1st' => '60',
 		'simi_2st' => '30',
 		'simi_3st' => '10',
+		'onto_limit' => '100',
 	);
 	public function __construct()
 	{
@@ -48,6 +49,7 @@ class setting_C
 			case 'simi_1st':
 			case 'simi_2st':
 			case 'simi_3st':
+			case 'onto_limit':
 				if($dck->uint($v))
 					$this->__set($k,array(intval($v)));
 				break;
