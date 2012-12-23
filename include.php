@@ -134,6 +134,12 @@
 		closedir($handle);
 	}
 	tai_autoIncludeClass('class');
+	function tai_vardebug($debugArray, $display = 0)
+	{
+		global $cfg;
+		if($display==0 && $cfg['debug']==0) return ;
+		echo '<pre>'.htmlspecialchars(var_export($debugArray,true)).'</pre>';
+	}
 	/* debug
 	*/
 ?>

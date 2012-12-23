@@ -65,7 +65,7 @@
 ?>
 	<div data-role="collapsible" data-content-theme="d" data-theme="b">
 		<h3>取得 瀏覽紀錄 分布的分類</h3>
-		<p>在七天內瀏覽過 <?php echo count($nidbyrid); ?> 個分類。</p>
+		<p>您瀏覽過 <?php echo count($nidbyrid); ?> 個分類。</p>
 		<table class="viewTab">
 			<tr><th>分類ID</th><th>閱讀數量</th></tr>
 		<?php 

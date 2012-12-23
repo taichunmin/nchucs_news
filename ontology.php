@@ -36,6 +36,8 @@
 	// cid => nid => tid => cnt
 	function getNewNewsCateTerm()
 	{
+		global $lastDate;
+		
 		// 取得最後的日期
 		$sql = "select `date` from `newsbydate` order by `date` desc limit 1";
 		$lastDate = tai_mysqlResult($sql);
@@ -59,50 +61,70 @@
 	$data = rc4getData();
 	$new = getNewNewsCateTerm();
 	
-	//print_r($data);
+	//tai_vardebug($data);
 	//資料preset
-	$classSelect=5;
-	$termSelect=5;
+	$classSelect=41;
+	$termSelect=0;
 	/*演算法開始*/
 	foreach($data as $uid => $cid_list){
 		/*Step1：新建一個使用者CLASS的權重表=>加總選定的CLASS的新聞總數=>標準化*/
 		arsort($cid_list['count_nid']);//如果資料抓出來就有遞減排序，可刪
-		$cid_weight_list=array_slice($cid_list['count_nid'],0,$classSelect,true);
-		//print_r($cid_weight_list);//測試輸出使用者排名前$classSelect的類別
+		if($classSelect>count($cid_list)){
+			$cid_weight_list=$cid_list['count_nid'];
+		}
+		else{
+			$cid_weight_list=array_slice($cid_list['count_nid'],0,$classSelect,true);
+		}
+		//tai_vardebug($cid_weight_list);//測試輸出使用者排名前$classSelect的類別
 		$sum_nid=array_sum($cid_weight_list);
 		$cid_tid_weight=array();
 		foreach($cid_weight_list as $cid => $weight){
 			$cid_weight_list[$cid]/=$sum_nid;
 			/*Step2：新建term的權重表=>加總CLASS下的freq總數=>標準化*/
 			arsort($cid_list['tf_list'][$cid]);//如果資料抓出來就有遞減排序，可刪
-			$cid_tid_weight[$cid]=array_slice($cid_list['tf_list'][$cid],0,$termSelect,true);
-			//print_r($cid_tid_weight[$cid]);//測試輸出使用者類別下排名前$termSelect的詞
+			if($termSelect>count($cid_list['tf_list'][$cid])){
+				$cid_tid_weight[$cid]=$cid_list['tf_list'][$cid];
+			}
+			else{
+				$cid_tid_weight[$cid]=array_slice($cid_list['tf_list'][$cid],0,$termSelect,true);
+			}
+			tai_vardebug($cid_tid_weight[$cid]);//測試輸出使用者類別下排名前$termSelect的詞
 			$sum_freq=array_sum($cid_tid_weight[$cid]);
 			foreach($cid_tid_weight[$cid] as $tid => $freq){
 				$cid_tid_weight[$cid][$tid]/=$sum_freq;//兩項表不先相乘，等HIT在乘，盡可能減少運算空間
 			}//跳出=>該類的詞權重表完成
 			/*echo 'uid='.$uid.'cid='.$cid.'的詞權重表：'; 
-			print_r($cid_tid_weight[$cid]);
+			tai_vardebug($cid_tid_weight[$cid]);
 			echo '<br />'; /**/
 			/*Step：比較新進新聞*/
-			foreach($new[$cid] as $nid =>$tf_list){
-				if($intersect=array_intersect_key($tf_list,$cid_tid_weight[$cid])){
-					/*print_r($intersect);
-					echo '<br />'; /**/
-					foreach($intersect as $tid =>$freq){
-						$result[$uid][$nid]+=$freq*$cid_tid_weight[$cid][$tid]*$cid_weight_list[$cid];
+			if(is_array($new[$cid]))
+				foreach($new[$cid] as $nid =>$tf_list){
+					if($intersect=array_intersect_key($tf_list,$cid_tid_weight[$cid])){
+						/*tai_vardebug($intersect);
+						echo '<br />'; /**/
+						foreach($intersect as $tid =>$freq){
+							$result[$uid][$nid]+=$freq*$cid_tid_weight[$cid][$tid]*$cid_weight_list[$cid];
+						}
 					}
-				}
 			}//一個類別的新進新聞被比對完
 		}//跳出=>該使用者類別的權重表完成
 		/*echo 'uid='.$uid.'的類別權重表：'; 
-		print_r($cid_weight_list);
+		tai_vardebug($cid_weight_list);
 		echo '<br />'; /**/
-		arsort($result[$uid]);//不可刪
+		//arsort($result[$uid]);  //不可刪
 		/*echo 'uid='.$uid.'的新進新聞權重表：';
 		echo '<br />'; 
-		print_r($result[$uid]);
+		tai_vardebug($result[$uid]);
 		echo '<br />'; /**/
 	}
-	print_r($result);//result=array(uid=>array(nid=>weight))
+	//tai_vardebug($result);//result=array(uid=>array(nid=>weight))
+	$sql = "delete from `ontology` where `date` = '$lastDate'";
+	$sql = "insert into `ontology` (`uid`,`date`,`nid`,`weight`) values ";
+	$tmp = array();
+	foreach( array_keys($result) as $uid )
+		foreach( array_keys($result[$uid]) as $nid )
+			$tmp[] = " ($uid,'$lastDate',$nid,{$result[$uid][$nid]}) ";
+	$sql .= implode(',',$tmp);
+	//tai_vardebug($tmp);//result=array(uid=>array(nid=>weight))
+	tai_mysqlExec($sql);
 ?>

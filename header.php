@@ -12,6 +12,11 @@
 		<script src="js/jquery.validate.min.js"></script>
 		<script src="script.js"></script>
 		<script src="js/messages_zh_TW.js"></script>
+		<style>
+			p{
+				line-height: 150%;
+			}
+		</style>
 <?php
 	$pagenav = <<<navSTR
 			<div data-role="navbar" data-id="nav" >
