@@ -51,7 +51,7 @@
 						$sql = "select `rid`,`name` from `rss` order by `rid`";
 						$rssRes = mysql_query($sql);
 						while( $rssRow = mysql_fetch_assoc($rssRes) )
-							echo '<li'.(($ses->word_rid==$rssRow['rid'])?' data-theme="a"':'').'><a href="?rid='.$rssRow['rid'].'">'.$rssRow['name'].'</a></li>';
+							echo '<li'.(($ses->word_rid==$rssRow['rid'])?' data-theme="a"':'').'><a href="?rid='.$rssRow['rid'].'">'.str_replace('UDN','',$rssRow['name']).'</a></li>';
 						@mysql_free_result($rssRes);
 					?>
 					</ul>

@@ -64,7 +64,7 @@ case 'groupByCategory':
 	$dateRes = mysql_query($sql);
 	while( $dataRow = mysql_fetch_assoc($dateRes) )
 	{
-		echo "<li><a href=\"listNews.php?act=fliter&rid={$dataRow['rid']}&title=".urlencode($dataRow['name'])."\">{$dataRow['name']}<span class=\"ui-li-count\">{$dataRow['cnt']}</span></a></li>";
+		echo "<li><a href=\"listNews.php?act=fliter&rid={$dataRow['rid']}&title=".urlencode(str_replace('UDN','',$dataRow['name']))."\">".str_replace('UDN','',$dataRow['name'])."<span class=\"ui-li-count\">{$dataRow['cnt']}</span></a></li>";
 	}
 	@mysql_free_result($dateRes);
 	echo '</ul>';

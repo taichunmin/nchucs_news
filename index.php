@@ -90,7 +90,7 @@ else	// 已登入，顯示功能選單
 						依分類<br />看新聞
 					</a>
 					<a data-role="button" href="recommand1.php" data-theme="b">
-						相似度<br />推薦展示
+						同好者<br />推薦展示
 					</a>
 					<a data-role="button" href="recommand2.php" data-theme="b">
 						Ontology<br />推薦展示

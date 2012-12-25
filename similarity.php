@@ -67,7 +67,7 @@
 			if($user_termFreq[$uid]*$user_termFreq[$userList[$index]]!=0){
 				$similarity/=$user_termFreq[$uid]*$user_termFreq[$userList[$index]];
 			}
-			echo 'uid='.$uid.'跟uid='.$userList[$index].'的相似度為:'.$similarity.'<br />';
+			//echo 'uid='.$uid.'跟uid='.$userList[$index].'的同好度為:'.$similarity.'<br />';
 			$simi->set($uid, $userList[$index], $similarity);
 			$similarity=0;
 		}

@@ -74,7 +74,7 @@ else $uid = $ses->uid;
 	</div>
 <?php
 	// 取得 推薦紀錄
-	$sql = "select * from `ontology` where `uid` = '$uid'";
+	$sql = "select * from `ontology` where `uid` = '$uid' order by `weight` desc";
 	$ontoRes = mysql_query($sql);
 	$ontology = array();
 ?>

@@ -23,19 +23,19 @@
 				}
 			?>
 			<div data-role="collapsible" data-collapsed="false" data-content-theme="d" data-theme="b">
-				<h3>相似度推薦設定</h3>
-				<p>說明：在此設定「相似度」這個推薦方法從相似度前三名的使用者中，推薦的新聞最大值。</p>
-				<label for="simi_1st">第①相似推薦數量：</label>
+				<h3>同好者推薦設定</h3>
+				<p>說明：在此設定「同好者」這個推薦方法從前三名同好者中，推薦的新聞最大值。</p>
+				<label for="simi_1st">第①同好推薦數量：</label>
 				<input type="range" name="simi_1st" id="simi_1st" value="<?=$stt->simi_1st?>" min="0" max="100" step="5" data-highlight="true"  /><br />
-				<label for="simi_2st">第②相似推薦數量：</label>
+				<label for="simi_2st">第②同好推薦數量：</label>
 				<input type="range" name="simi_2st" id="simi_2st" value="<?=$stt->simi_2st?>" min="0" max="100" step="5" data-highlight="true"  /><br />
-				<label for="simi_3st">第③相似推薦數量：</label>
+				<label for="simi_3st">第③同好推薦數量：</label>
 				<input type="range" name="simi_3st" id="simi_3st" value="<?=$stt->simi_3st?>" min="0" max="100" step="5" data-highlight="true"  />
 			</div>
 			<div data-role="collapsible" data-collapsed="false" data-content-theme="d" data-theme="b">
 				<h3>Ontology 推薦設定</h3>
 				<p>說明：在此設定「Ontology」這個推薦方法推薦的新聞最大值。</p>
-				<label for="onto_limit">第①相似推薦數量：</label>
+				<label for="onto_limit">第①同好推薦數量：</label>
 				<input type="range" name="onto_limit" id="onto_limit" value="<?=$stt->onto_limit?>" min="0" max="100" step="5" data-highlight="true"  /><br />
 			</div>
 <?php

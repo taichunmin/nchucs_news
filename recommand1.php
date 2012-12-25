@@ -10,7 +10,7 @@
 ?>
 	<div data-role="page" id="-<?php echo $_GET['act']; ?>" data-add-back-btn="true">
 		<div data-role="header" data-position="fixed">
-			<h1>相似度推薦展示</h1>
+			<h1>同好者推薦展示</h1>
 			<a href="index.php?act=logout" data-icon="alert" data-direction="reverse" class="ui-btn-right" data-ajax="false">登出</a>
 <?php echo $pagenav; ?>
 		</div>
@@ -35,7 +35,7 @@
 		<p>目前以 <?php echo tai_dbUser('name',NULL,$uid); ?>（UID = <?php echo $uid; ?>）登入。</p>
 	</div>
 <?php
-	// 取得相似度列表
+	// 取得同好者列表
 	$simiArry = $simi->get($uid);
 	$simiUser = array();
 	foreach( array_keys($simiArry) as $i => $k )
@@ -46,7 +46,7 @@
 	}
 ?>
 	<div data-role="collapsible" data-content-theme="d" data-theme="b">
-		<h3>取得相似度列表</h3>
+		<h3>取得同好者列表</h3>
 		<table class="viewTab">
 			<tr>
 				<th>姓名</th>
@@ -60,16 +60,16 @@
 		<?php } ?>
 		</table>
 		<?php
-		if(isset($simiUser[0])) echo '<p>第①相似者：'.tai_dbUser('name',NULL,$simiUser[0]).'（UID = '.$simiUser[0].'）</p>';
-		if(isset($simiUser[1])) echo '<p>第②相似者：'.tai_dbUser('name',NULL,$simiUser[1]).'（UID = '.$simiUser[1].'）</p>';
-		if(isset($simiUser[2])) echo '<p>第③相似者：'.tai_dbUser('name',NULL,$simiUser[2]).'（UID = '.$simiUser[2].'）</p>';
+		if(isset($simiUser[0])) echo '<p>第①同好者：'.tai_dbUser('name',NULL,$simiUser[0]).'（UID = '.$simiUser[0].'）</p>';
+		if(isset($simiUser[1])) echo '<p>第②同好者：'.tai_dbUser('name',NULL,$simiUser[1]).'（UID = '.$simiUser[1].'）</p>';
+		if(isset($simiUser[2])) echo '<p>第③同好者：'.tai_dbUser('name',NULL,$simiUser[2]).'（UID = '.$simiUser[2].'）</p>';
 		?>
-		<p>註：相似度並非即時更新，若要更新<a href="similarity.php" target="similarityUpdate" data-role="button" data-icon="refresh" data-inline="true" data-mini="true" onclick="alert('更新成功後會自動重新整理'); $('#similarityUpdate').one('load',function(){ history.go(0); });" >請按此</a><iframe style="width:0; height:0" id="similarityUpdate" ></iframe></p>
+		<p>註：同好者並非即時更新，若要更新<a href="similarity.php" target="similarityUpdate" data-role="button" data-icon="refresh" data-inline="true" data-mini="true" onclick="alert('更新成功後會自動重新整理'); $('#similarityUpdate').one('load',function(){ history.go(0); });" >請按此</a><iframe style="width:0; height:0" id="similarityUpdate" ></iframe></p>
 	</div>
 <?php
 	if(count($simiUser)>0)
 	{
-		// 取得自己讀過的文章與相似者的差異
+		// 取得自己讀過的文章與同好者的差異
 		$rand = rand(0,255);
 		$sql = "CREATE TEMPORARY TABLE `reco1_$rand` (`nid` int(11) NOT NULL,`view_t` timestamp NOT NULL)";
 		tai_mysqlExec($sql);
@@ -78,7 +78,7 @@
 			$sql = "insert into `reco1_$rand` select a.* from ( select `nid`,`view_t` from `viewlog` where `uid` = {$v} ) as a left join ( select `nid`,`view_t` from `viewlog` where `uid` = {$uid} ) as b on a.`nid` = b.`nid` where b.`nid` is null order by `view_t` desc limit ".($stt->{'simi_'.($k+1).'st'});
 			tai_mysqlExec($sql);
 		}
-		$sql = "select distinct `nid`,`view_t` from `reco1_$rand` order by `view_t`";
+		$sql = "select distinct `nid`,`view_t` from `reco1_$rand` order by `view_t` desc";
 		$rcmdRes = mysql_query($sql);
 		$rcmd = array();
 		while( $rcmdRow = mysql_fetch_assoc($rcmdRes) )
@@ -96,7 +96,7 @@
 		@mysql_free_result($rcmdRes);
 ?>
 	<div data-role="collapsible" data-content-theme="d" data-theme="b">
-		<h3>最相似者讀過減去你讀過的</h3>
+		<h3>同好者讀過減去你讀過的</h3>
 		<table class="viewTab">
 			<tr>
 				<th>新聞 ID</th>
@@ -111,7 +111,7 @@
 		</table>
 	</div>
 	<div data-role="collapsible" data-content-theme="d" data-theme="b">
-		<h3>最相似者讀過，你卻沒看過的新聞</h3>
+		<h3>同好讀過，你卻沒看過的新聞</h3>
 		<ul data-role="listview" data-filter="true">
 		<?php foreach($rcmd as $v) { ?>
 			<li><a href="news.php?nid=<?=$v['nid']?>}"><h3><?=$v['title']?></h3><p><?=$v['news_t']?></p></a></li>
