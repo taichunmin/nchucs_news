@@ -8,7 +8,7 @@
 	else $uid = $ses->uid;
 	$cfg['sevenDay'] = date('Y-m-d',time()-7*24*60*60);
 ?>
-	<div data-role="page" id="-<?php echo $_GET['act']; ?>" data-add-back-btn="true">
+	<div data-role="page" id="similarity" data-add-back-btn="true">
 		<div data-role="header" data-position="fixed">
 			<h1>同好者推薦展示</h1>
 			<a href="index.php?act=logout" data-icon="alert" data-direction="reverse" class="ui-btn-right" data-ajax="false">登出</a>
@@ -114,7 +114,7 @@
 		<h3>同好讀過，你卻沒看過的新聞</h3>
 		<ul data-role="listview" data-filter="true">
 		<?php foreach($rcmd as $v) { ?>
-			<li><a href="news.php?nid=<?=$v['nid']?>}"><h3><?=$v['title']?></h3><p><?=$v['news_t']?></p></a></li>
+			<li><a href="news.php?nid=<?=$v['nid']?>"><h3><?=$v['title']?></h3><p><?=$v['news_t']?></p></a></li>
 		<?php } ?>
 		</ul>
 	</div>

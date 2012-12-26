@@ -4,8 +4,6 @@
 	include_once("header.php");
 	if(!$ses->uid) tai_location('index.php');
 	
-	$cfg['yesterday'] = date('Y-m-d',time()-24*60*60);
-	
 	function tai_viewlogByUid()
 	{
 		global $cfg,$ses;
@@ -47,13 +45,13 @@ else $uid = $ses->uid;
 		table.viewTab{ width: 100%; border-collapse: collapse; }
 		table.viewTab th, table.viewTab td{ border: 1px solid #000; }
 	</style>
-	<div data-role="collapsible" data-content-theme="d" data-theme="b">
+	<div data-role="collapsible" data-collapsed="false" data-content-theme="d" data-theme="b">
 		<h3>取得目前的登入資訊</h3>
 		<p>目前以 <?php echo tai_dbUser('name',NULL,$uid); ?> (UID: <?php echo $uid; ?>) 登入。</p>
 	</div>
 <?php
 	// 取得推薦統計
-	$sql = "select `uid`,count(`nid`) as 'cnt' from `ontology` where `date` = '{$cfg['yesterday']}' group by `uid`";
+	$sql = "select `uid`,count(`nid`) as 'cnt' from `ontology` group by `uid`";
 	$analyRes = mysql_query($sql);
 ?>
 	<div data-role="collapsible" data-content-theme="d" data-theme="b">
@@ -99,14 +97,14 @@ else $uid = $ses->uid;
 	</div>
 <?php
 	// 過濾使用者看過的新聞
-	$sql = "select a.`nid`,`title`,`news_t` from `news` as a left join `viewlog` as b on a.`nid` = b.`nid` where a.`nid` in (".implode(',',$ontology).") and b.`nid` is null limit ".$stt->onto_limit;
+	$sql = "select a.`nid`,`title`,`news_t` from `news` as a left join `viewlog` as b on a.`nid` = b.`nid` where a.`nid` in (".implode(',',$ontology).") and b.`nid` is null order by `news_t` desc limit ".$stt->onto_limit;
 	$rcmdRes = mysql_query($sql);
 ?>
 	<div data-role="collapsible" data-content-theme="d" data-theme="b">
 		<h3>Ontology 推薦</h3>
 		<ul data-role="listview" data-filter="true">
 		<?php while($rcmdRow = mysql_fetch_assoc($rcmdRes)) { ?>
-			<li><a href="news.php?nid=<?=$rcmdRow['nid']?>}"><h3><?=$rcmdRow['title']?></h3><p><?=$rcmdRow['news_t']?></p></a></li>
+			<li><a href="news.php?nid=<?=$rcmdRow['nid']?>"><h3><?=$rcmdRow['title']?></h3><p><?=$rcmdRow['news_t']?></p></a></li>
 		<?php } mysql_free_result($rcmdRes);?>
 		</ul>
 	</div>

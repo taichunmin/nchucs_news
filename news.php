@@ -25,6 +25,7 @@
 		$title = "新聞 ID: {$_GET['nid']}";
 	}
 	else $title = '此新聞不存在';
+	@mysql_free_result($newsRes);
 ?>
 	<div data-role="page" id="news-<?php echo $_GET['nid']; ?>" data-add-back-btn="true">
 		<div data-role="header" data-position="fixed">

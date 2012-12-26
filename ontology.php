@@ -146,9 +146,9 @@
 		}
 		else $date = $_GET['date'];
 		$result = ontology($date);
-		$sql = "delete from `ontology` where `date` = '$lastDate'";
+		$sql = "TRUNCATE `ontology`";
 		tai_mysqlExec($sql);
-		$sql = "insert into `ontology` (`uid`,`date`,`nid`,`weight`) values ";
+		$sql = "insert into `ontology` (`uid`,`nid`,`weight`) values ";
 		$tmp = array();
 		foreach( array_keys($result) as $uid )
 		{
@@ -156,7 +156,7 @@
 			foreach( array_keys($result[$uid]) as $nid )
 			{
 				if($i++>=100) break;
-				$tmp[] = " ($uid,'$lastDate',$nid,{$result[$uid][$nid]}) ";
+				$tmp[] = " ($uid,$nid,{$result[$uid][$nid]}) ";
 			}
 		}
 		$sql .= implode(',',$tmp);

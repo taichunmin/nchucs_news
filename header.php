@@ -22,7 +22,7 @@
 			<div data-role="navbar" data-id="nav" >
 				<ul>
 					<li><a data-theme="b" href="index.php">功能選單</a></li>
-					<li><a data-theme="b" href="">今日推薦</a></li>
+					<li><a data-theme="b" href="today.php">今日推薦</a></li>
 					<li><a data-theme="b" href="profile.php" data-ajax="false">個人資料</a></li>
 					<li><a data-theme="b" href="setting.php">設定</a></li>
 				</ul>

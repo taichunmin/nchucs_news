@@ -1,3 +1,10 @@
+// default setting
+$(document).bind("mobileinit", function(){
+  $.extend(  $.mobile , {
+    ajaxEnabled: false,
+  });
+});
+
 // work on setting.php
 $( document ).delegate("#setting", "pageinit", function() {
 	$('#setting').find(':input').change(function(){
