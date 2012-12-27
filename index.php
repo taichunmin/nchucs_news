@@ -26,6 +26,7 @@
 			$ses->uid = $lgnRow['uid'];
 			$sql = "update `user` set `login_t`=now() where `uid`='{$ses->uid}'";
 			tai_mysqlExec($sql);
+			tai_location('today.php');
 		}
 		else tai_location('index.php');
 	}
@@ -87,7 +88,7 @@ else	// 已登入，顯示功能選單
 						同好者<br />推薦展示
 					</a>
 					<a data-role="button" href="recommand2.php" data-theme="b">
-						Ontology<br />推薦展示
+						個人化<br />推薦展示
 					</a>
 					<a data-role="button" href="word.php" data-theme="b">
 						關鍵字<br />排行

@@ -36,23 +36,25 @@
 	// cid => nid => tid => cnt
 	function getNewNewsCateTerm($date = null)
 	{
-		global $lastDate;
 		
-		if( isset($date) )
+		if( !empty($date) )
 		{
 			$sql = "select count(*) from `newsbydate` where `date`='$date'";
 			$dateExist = tai_mysqlResult($sql);
 			if($dateExist==0) unset($date);
 		}
-		if( !isset($date) )
+		if( empty($date) )
 		{
 			// 取得最後的日期
-			$sql = "select `date` from `newsbydate` order by `date` desc limit 1";
-			$date = tai_mysqlResult($sql);
+			$sql = "select `date` from `newsbydate` order by `date` desc limit 2";
+			$dateRes = mysql_query($sql);
+			while( $dateRow = mysql_fetch_assoc($dateRes) )
+				$date[] = $dateRow['date'];
+			@mysql_free_result($dateRes);
 		}
-		$lastDate = $date;
+		$lastDate = implode("','",$date);
 		// echo $lastDate;
-		$sql = "select `rid`,`nid` from `news` where LEFT(`news_t`,10) = '$lastDate'";
+		$sql = "select `rid`,`nid` from `news` where LEFT(`news_t`,10) in ('$lastDate') ";
 		$new = array();
 		$newRes = mysql_query($sql);
 		while( $newRow = mysql_fetch_assoc($newRes) )
@@ -73,6 +75,8 @@
 	{
 		$data = rc4getData();
 		$new = getNewNewsCateTerm($date);
+		
+		//tai_vardebug($new);
 		//資料preset
 		$classSelect=41;
 		$termSelect=0;
@@ -101,7 +105,7 @@
 				else{
 					$cid_tid_weight[$cid]=array_slice($cid_list['tf_list'][$cid],0,$termSelect,true);
 				}
-				tai_vardebug($cid_tid_weight[$cid]);//測試輸出使用者類別下排名前$termSelect的詞
+				//tai_vardebug($cid_tid_weight[$cid]);//測試輸出使用者類別下排名前$termSelect的詞
 				$sum_freq=array_sum($cid_tid_weight[$cid]);
 				foreach($cid_tid_weight[$cid] as $tid => $freq){
 					$cid_tid_weight[$cid][$tid]/=$sum_freq;//兩項表不先相乘，等HIT在乘，盡可能減少運算空間
@@ -133,35 +137,21 @@
 		//tai_vardebug($result);//result=array(uid=>array(nid=>weight))
 		return $result;
 	}
-	while(true)
+	$result = ontology(null);
+	$sql = "TRUNCATE `ontology`";
+	tai_mysqlExec($sql);
+	$sql = "insert into `ontology` (`uid`,`nid`,`weight`) values ";
+	$tmp = array();
+	foreach( array_keys($result) as $uid )
 	{
-		if(!isset($_GET['date']))
+		$i = 0;
+		foreach( array_keys($result[$uid]) as $nid )
 		{
-			$cli->p('Please Input Ontology Date -> ');
-			$date = stream_get_line(STDIN,10000,PHP_EOL);
-			if($date=='exit' || $date=='quit')
-				break;
-			if(!preg_match('/^\d{4}-\d{2}-\d{2}$/',$date))
-				continue;
+			if($i++>=100) break;
+			$tmp[] = " ($uid,$nid,{$result[$uid][$nid]}) ";
 		}
-		else $date = $_GET['date'];
-		$result = ontology($date);
-		$sql = "TRUNCATE `ontology`";
-		tai_mysqlExec($sql);
-		$sql = "insert into `ontology` (`uid`,`nid`,`weight`) values ";
-		$tmp = array();
-		foreach( array_keys($result) as $uid )
-		{
-			$i = 0;
-			foreach( array_keys($result[$uid]) as $nid )
-			{
-				if($i++>=100) break;
-				$tmp[] = " ($uid,$nid,{$result[$uid][$nid]}) ";
-			}
-		}
-		$sql .= implode(',',$tmp);
-		//tai_vardebug($tmp);//result=array(uid=>array(nid=>weight))
-		tai_mysqlExec($sql);
-		if(isset($_GET['date'])) break;
 	}
+	$sql .= implode(',',$tmp);
+	//tai_vardebug($tmp);//result=array(uid=>array(nid=>weight))
+	tai_mysqlExec($sql);
 ?>

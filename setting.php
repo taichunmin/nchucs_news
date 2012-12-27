@@ -33,8 +33,8 @@
 				<input type="range" name="simi_3st" id="simi_3st" value="<?=$stt->simi_3st?>" min="0" max="100" step="5" data-highlight="true"  />
 			</div>
 			<div data-role="collapsible" data-collapsed="false" data-content-theme="d" data-theme="b">
-				<h3>Ontology 推薦設定</h3>
-				<p>說明：在此設定「Ontology」這個推薦方法推薦的新聞最大值。</p>
+				<h3>個人化推薦設定</h3>
+				<p>說明：在此設定「個人化」這個推薦方法推薦的新聞最大值。</p>
 				<label for="onto_limit">第①同好推薦數量：</label>
 				<input type="range" name="onto_limit" id="onto_limit" value="<?=$stt->onto_limit?>" min="0" max="100" step="5" data-highlight="true"  /><br />
 			</div>

@@ -22,7 +22,7 @@
 		table.viewTab th, table.viewTab td{ border: 1px solid #000; }
 	</style>
 		<div data-role="header" data-position="fixed">
-			<h1>Ontology 推薦展示</h1>
+			<h1>個人化推薦展示</h1>
 			<a href="index.php?act=logout" data-icon="alert" data-direction="reverse" class="ui-btn-right" data-ajax="false">登出</a>
 <?php echo $pagenav; ?>
 		</div>
@@ -55,7 +55,7 @@ else $uid = $ses->uid;
 	$analyRes = mysql_query($sql);
 ?>
 	<div data-role="collapsible" data-content-theme="d" data-theme="b">
-		<h3>Ontology 推薦統計</h3>
+		<h3>個人化推薦統計</h3>
 		<table class="viewTab">
 			<tr>
 				<th>使用者</th>
@@ -68,7 +68,7 @@ else $uid = $ses->uid;
 			</tr>
 		<?php } mysql_free_result($analyRes); ?>
 		</table>
-		<p>註：Ontology 推薦並非即時更新，若要更新<a href="ontology.php?date=<?=$cfg['yesterday']?>" target="ontologyUpdate" data-role="button" data-icon="refresh" data-inline="true" data-mini="true" onclick="alert('更新成功後會自動重新整理'); $('#ontologyUpdate').one('load',function(){ history.go(0); });" >請按此</a><iframe style="width:0; height:0" id="ontologyUpdate" ></iframe></p>
+		<p>註：個人化推薦並非即時更新，若要更新<a href="ontology.php?date=<?=$cfg['yesterday']?>" target="ontologyUpdate" data-role="button" data-icon="refresh" data-inline="true" data-mini="true" onclick="alert('更新成功後會自動重新整理'); $('#ontologyUpdate').one('load',function(){ history.go(0); });" >請按此</a><iframe style="width:0; height:0" id="ontologyUpdate" ></iframe></p>
 	</div>
 <?php
 	// 取得 推薦紀錄
@@ -77,7 +77,7 @@ else $uid = $ses->uid;
 	$ontology = array();
 ?>
 	<div data-role="collapsible" data-content-theme="d" data-theme="b">
-		<h3>Ontology 推薦詳細資料</h3>
+		<h3>個人化推薦詳細資料</h3>
 		<table class="viewTab">
 			<tr>
 				<th>新聞 ID</th>
@@ -101,7 +101,7 @@ else $uid = $ses->uid;
 	$rcmdRes = mysql_query($sql);
 ?>
 	<div data-role="collapsible" data-content-theme="d" data-theme="b">
-		<h3>Ontology 推薦</h3>
+		<h3>個人化推薦</h3>
 		<ul data-role="listview" data-filter="true">
 		<?php while($rcmdRow = mysql_fetch_assoc($rcmdRes)) { ?>
 			<li><a href="news.php?nid=<?=$rcmdRow['nid']?>"><h3><?=$rcmdRow['title']?></h3><p><?=$rcmdRow['news_t']?></p></a></li>

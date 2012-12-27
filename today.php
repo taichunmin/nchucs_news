@@ -43,7 +43,7 @@
 	}
 	@mysql_free_result($simiRes);
 	
-	// 加入 Ontology 推薦
+	// 加入個人化推薦
 	// 取出 ontology TABLE 的推薦結果，存進暫時的 TABLE
 	$sql = "insert into `today_$rand` select `nid` from `ontology` where `uid` = '{$ses->uid}' order by `weight` desc limit {$stt->onto_limit}";
 		//echo $sql.'<br />';
