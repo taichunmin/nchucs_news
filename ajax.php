@@ -67,7 +67,7 @@ if(intval($req['pretty'])!=0 || intval($req['debug'])==1) $jsonOpt |= JSON_PRETT
 if(intval($req['unescaped_unicode']!=0)) $jsonOpt ^= JSON_UNESCAPED_UNICODE;
 
 if(intval($req['debug'])==1)
-	die('<pre>'.htmlspecialchars(json_encode($data,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT)).'</pre>');
+	die('<pre>'.htmlspecialchars(json_encode($data,intval($jsonOpt))).'</pre>');
 else die(json_encode($data,intval($jsonOpt)));
 
 
