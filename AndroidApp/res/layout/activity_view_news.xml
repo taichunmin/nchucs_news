@@ -26,8 +26,9 @@
             android:id="@+id/etNid"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-        	android:layout_weight=".50"
-            android:ems="10" />
+            android:layout_weight=".50"
+            android:ems="10"
+            android:textColor="#fff" />
 
         <Button
             android:id="@+id/btNid"
@@ -35,7 +36,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight=".25"
-            android:text="Get" />
+            android:text="Get"
+            android:textColor="#fff" />
 
     </LinearLayout>
     

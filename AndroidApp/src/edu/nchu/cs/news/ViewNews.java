@@ -73,10 +73,6 @@ public class ViewNews extends Activity {
 			ips.close();
 			return sb.toString();
 		} 
-		catch( Exception e )
-		{
-			return "";
-		}
 		finally {
 			// any cleanup code...
 		}
@@ -92,7 +88,7 @@ public class ViewNews extends Activity {
 				int nid = Integer.parseInt(etNid.getText().toString());
 				// 檢查 NID 的正確性
 				if(nid == 0) throw new Exception("Nid Can't be zero.");
-				String jsonHtml = getUriContent( "http://news.taichunmin.idv.tw/ajax.php?get=news&nid=" + nid );
+				String jsonHtml = getUriContent( "http://news.taichunmin.idv.tw/nchucs_news/ajax.php?get=news&nid=" + nid );
 				// 檢查從伺服器取得的 json 不為空
 				if(jsonHtml.length()==0) throw new Exception("Server didn't send json data.");
 				JSONObject jsonObject = new JSONObject(jsonHtml);
