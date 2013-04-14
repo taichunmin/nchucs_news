@@ -8,8 +8,10 @@ try{
 	switch($req['get'])
 	{
 	case 'news':
+		/*
 		if( !$ses->uid )	// 未登入，不給使用
 			throw new Exception('Need login.');
+		*/
 		if( preg_match('/^\d+(,\d+)*$/',$req['nid']))
 		{
 			$sql = "select * from news where nid in ({$req['nid']})";
@@ -65,8 +67,8 @@ if(intval($req['pretty'])!=0 || intval($req['debug'])==1) $jsonOpt |= JSON_PRETT
 if(intval($req['unescaped_unicode']!=0)) $jsonOpt ^= JSON_UNESCAPED_UNICODE;
 
 if(intval($req['debug'])==1)
-	die('<pre>'.htmlspecialchars(json_encode($data,$jsonOpt)).'</pre>');
-else die(json_encode($data,$jsonOpt));
+	die('<pre>'.htmlspecialchars(json_encode($data,intval($jsonOpt))).'</pre>');
+else die(json_encode($data,intval($jsonOpt)));
 
 
 ?>
