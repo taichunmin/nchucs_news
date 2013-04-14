@@ -9,6 +9,35 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ViewNews" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1.0" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+        	android:textColor="#fff"
+        	android:layout_weight=".20"
+            android:text="NID:" />
+
+        <EditText
+            android:id="@+id/etNid"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+        	android:layout_weight=".50"
+            android:ems="10" />
+
+        <Button
+            android:id="@+id/btNid"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".25"
+            android:text="Get" />
+
+    </LinearLayout>
     
     <TextView
         android:id="@+id/tvViewNewsTitle"
@@ -47,9 +76,9 @@
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
 			    android:padding="1sp"
-			    android:text="@string/viewNewsContentWait"
-			    android:textSize="15sp"
-			    android:textColor="#fff" />
+			    android:text="@string/viewNewsContentEmpty"
+			    android:textColor="#fff"
+			    android:textSize="15sp" />
 			
 		</LinearLayout>
 	    

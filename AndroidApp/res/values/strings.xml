@@ -8,5 +8,6 @@
     <string name="sViewNewsTitle">標題：</string>
     <string name="viewNewsDatetime">時間：</string>
     <string name="viewNewsContentWait">讀取中，請稍候...</string>
+    <string name="viewNewsContentEmpty">提示：請輸入 NID 以顯示新聞</string>
 
 </resources>
