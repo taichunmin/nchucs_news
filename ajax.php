@@ -22,6 +22,22 @@ try{
 		}
 		else throw new Exception('The news nid incorrect.');
 		break;
+	case 'rss':
+	case 'category':
+		if( isset($req['rid']) && !preg_match('/^\d+(,\d+)*$/',$req['rid']))
+			throw new Exception('The '.$req['get'].' rid incorrect.');
+		$sql = "select * from `rss`";
+		if(isset($req['rid'])) $sql .= "where rid in ({$req['rid']})";
+		if(! $rssRes = mysql_query($sql))
+			throw new Exception(mysql_error());
+		$data['rssCnt'] = mysql_num_rows($rssRes);
+		while( $rssRow = mysql_fetch_assoc($rssRes) )
+		{
+			$rssRow['varible'] = json_decode($rssRow['varible'],true);
+			$data['rss'][] = $rssRow;
+		}
+		@mysql_free_result($rssRes);
+		break;
 	default:
 		throw new Exception('The act is not support.');
 		break;
