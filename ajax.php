@@ -48,7 +48,25 @@ catch( Exception $e )
 	$data['error'][] = $e->getMessage();
 }
 
-die('<pre>'.htmlspecialchars(var_export($data,true)).'</pre>');
-//die(json_encode($data));
+// 強制全部使用 String 以方便 Android 使用
+function forceString($v)
+{
+	if(is_array($v))
+		return array_map('forceString',$v);
+	if(is_string($v))
+		return $v;
+	return $v.'';	
+}
+$data = array_map('forceString',$data);
+
+// 設置輸出選項
+$jsonOpt = JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES;
+if(intval($req['pretty'])!=0 || intval($req['debug'])==1) $jsonOpt |= JSON_PRETTY_PRINT;
+if(intval($req['unescaped_unicode']!=0)) $jsonOpt ^= JSON_UNESCAPED_UNICODE;
+
+if(intval($req['debug'])==1)
+	die('<pre>'.htmlspecialchars(json_encode($data,$jsonOpt)).'</pre>');
+else die(json_encode($data,$jsonOpt));
+
 
 ?>
