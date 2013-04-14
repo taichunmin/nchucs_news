@@ -1,0 +1,17 @@
+<resources>
+
+    <string name="title_activity_login">登入</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">電子郵件</string>
+    <string name="prompt_password">密碼</string>
+    <string name="action_sign_in_register"><b>登入</b>或註冊</string>
+    <string name="action_sign_in_short">登入</string>
+    <string name="action_forgot_password">忘記密碼</string>
+    <string name="login_progress_signing_in">登入中</string>
+    <string name="error_invalid_email">不合格的電子郵件</string>
+    <string name="error_invalid_password">密碼太短</string>
+    <string name="error_incorrect_password">密碼不正確</string>
+    <string name="error_field_required">請填寫欄位</string>
+
+</resources>
