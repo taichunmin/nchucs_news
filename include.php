@@ -18,20 +18,18 @@
 	switch($_SERVER['HTTP_HOST'])
 	{
 	case '127.0.0.1':
+		$cfg['dbHost'] = 'news.taichunmin.idv.tw';
+		$cfg['dbUser'] = 'nchucsnews';
+		$cfg['dbPass'] = 't5KthfzGKpts4ctc';
+		$cfg['dbDatabase'] = 'nchucsnews';
+		// mysqldump -u root -p nchucsnews > db.sql
+		break;
 	default:
 		$cfg['dbHost'] = 'localhost';
 		$cfg['dbUser'] = 'nchucsnews';
 		$cfg['dbPass'] = 't5KthfzGKpts4ctc';
 		$cfg['dbDatabase'] = 'nchucsnews';
 		// mysqldump -u root -p nchucsnews > db.sql
-		break;
-	case '140.120.15.146':
-	case 'dmlab.cs.nchu.edu.tw':
-		$cfg['dbHost'] = 'localhost';
-		$cfg['dbUser'] = 'newsrecommender';
-		$cfg['dbPass'] = 'news@)!@';
-		$cfg['dbDatabase'] = 'newsrecommender';
-		// mysql -u newsrecommender -p newsrecommender < db.sql
 		break;
 	}
 	function tai_mysqlConnect()	// 連接資料庫
