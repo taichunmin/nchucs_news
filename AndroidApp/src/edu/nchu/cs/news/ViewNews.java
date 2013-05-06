@@ -89,7 +89,6 @@ public class ViewNews extends Activity {
 	{
 		@Override
 		public void onClick(View v) {
-			// TODO Auto-generated method stub
 			try
 			{
 				int nid = Integer.parseInt(etNid.getText().toString());
@@ -131,7 +130,6 @@ public class ViewNews extends Activity {
 	{
 		@Override
 		public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-			// TODO Auto-generated method stub
 			if (actionId == EditorInfo.IME_ACTION_SEARCH ||	// Search action
 		        actionId == EditorInfo.IME_ACTION_DONE ||	// Done action
 		        actionId == EditorInfo.IME_NULL && event.getAction() == KeyEvent.ACTION_DOWN)	// Enter

@@ -2,14 +2,21 @@ package edu.nchu.cs.news;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
 
 public class MainActivity extends Activity {
-
+	
+	Button btn_view_news, btn_login;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		findViews();
+		setListeners();
 	}
 
 	@Override
@@ -18,5 +25,33 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
+	private void findViews()
+	{
+		btn_view_news = (Button) findViewById( R.id.btn_view_news );
+		btn_login = (Button) findViewById( R.id.btn_login );
+	}
+	
+	private void setListeners()
+	{
+		btn_view_news.setOnClickListener(listen_view_news);
+		btn_login.setOnClickListener(listen_login);
+	}
 
+	private Button.OnClickListener listen_view_news = new Button.OnClickListener()
+	{
+		@Override
+		public void onClick(View v) {
+			startActivity( new Intent().setClass(MainActivity.this, ViewNews.class) );
+		}
+	};
+
+	private Button.OnClickListener listen_login = new Button.OnClickListener()
+	{
+		@Override
+		public void onClick(View v) {
+			startActivity( new Intent().setClass(MainActivity.this, LoginActivity.class) );
+		}
+	};
+	
 }
