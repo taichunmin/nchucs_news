@@ -1,8 +1,0 @@
-<resources>
-
-    <string name="app_name">新聞推薦系統 \u00A9dmlab.cs.nchu </string>
-    <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Settings</string>
-    <string name="title_activity_system_main">新聞推薦系統</string>
-
-</resources>
