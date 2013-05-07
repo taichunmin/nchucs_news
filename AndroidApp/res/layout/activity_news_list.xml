@@ -23,6 +23,7 @@
             android:orientation="vertical" >
 
             <RelativeLayout
+                android:id="@+id/rl_newsListItem1"
                 android:background="@drawable/background_white"
                 android:layout_height="50sp"
                 android:layout_width="match_parent" >
@@ -33,7 +34,6 @@
 					android:background="#000" />
 
 	            <TextView
-	                android:id="@+id/textView1"
 	                style="@style/fontsize_small"
 	                android:textColor="#111"
 	                android:layout_width="wrap_content"
@@ -43,7 +43,6 @@
 	                android:text="營收2位數年成長 華碩有信心" />
 
 	            <TextView
-	                android:id="@+id/textView1"
 	                style="@style/fontsize_xsmall"
 	                android:textColor="#111"
 	                android:layout_width="wrap_content"
@@ -55,51 +54,6 @@
 	                android:text="2013-05-06 21:44:27" />
 
 	            <ImageView
-	                android:id="@+id/imageView1"
-	                android:layout_width="30sp"
-	                android:layout_height="match_parent"
-	                android:layout_alignParentRight="true"
-	                android:layout_alignParentTop="true"
-	                android:layout_gravity="center_vertical"
-	                android:layout_marginRight="10sp"
-	                android:src="@drawable/play_icon" />
-	            
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:background="@drawable/background_white"
-                android:layout_height="50sp"
-                android:layout_width="match_parent" >
-    
-			    <View
-					android:layout_width="fill_parent"
-					android:layout_height="1dp"
-					android:background="#000" />
-
-	            <TextView
-	                android:id="@+id/textView1"
-	                style="@style/fontsize_small"
-	                android:textColor="#111"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:layout_alignParentLeft="true"
-	                android:layout_alignParentTop="true"
-	                android:text="營收2位數年成長 華碩有信心" />
-
-	            <TextView
-	                android:id="@+id/textView1"
-	                style="@style/fontsize_xsmall"
-	                android:textColor="#111"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:layout_alignParentLeft="true"
-	                android:layout_alignParentBottom="true"
-	                android:layout_marginLeft="3sp"
-	                android:layout_marginBottom="3sp"
-	                android:text="2013-05-06 21:44:27" />
-
-	            <ImageView
-	                android:id="@+id/imageView1"
 	                android:layout_width="30sp"
 	                android:layout_height="match_parent"
 	                android:layout_alignParentRight="true"

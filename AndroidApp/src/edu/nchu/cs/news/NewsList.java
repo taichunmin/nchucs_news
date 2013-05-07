@@ -7,15 +7,30 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 public class NewsList extends Activity {
 
 	private static final String ACTIVITY_TAG="NewsList";
+	RelativeLayout rl_newsListItem1;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_news_list);
+		findViews();
+		setListeners();
+	}
+	
+	private void findViews()
+	{
+		rl_newsListItem1 = (RelativeLayout) findViewById(R.id.rl_newsListItem1);
+		rl_newsListItem1.setTag(123);
+	}
+	
+	private void setListeners()
+	{
+		rl_newsListItem1.setOnClickListener(clickViewNews);
 	}
 
 	@Override
@@ -30,7 +45,7 @@ public class NewsList extends Activity {
 		@Override
 		public void onClick(View v) {
 			try{
-				int nid = Integer.parseInt( (String) v.getTag() );
+				int nid = (Integer) v.getTag();
 				Intent intent = new Intent();
 				intent.setClass(NewsList.this, ViewNews.class);
 				Bundle bundle = new Bundle();

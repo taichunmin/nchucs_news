@@ -24,15 +24,17 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.view.KeyEvent;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.EditText;
 import android.util.Log;
 
 public class ViewNews extends Activity {
 
-	private TextView tvViewNewsTitle;
-	private TextView tvViewNewsDatetime;
-	private TextView tvViewNewsContent;
+	private static final String ACTIVITY_TAG="ViewNews";
+	private TextView tvViewNewsTitle,tvViewNewsDatetime,tvViewNewsContent;
+	private View ll_nidEnter;
 	private EditText etNid;
 	private Button btNid;
 	private InputMethodManager inputManager;
@@ -41,16 +43,77 @@ public class ViewNews extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_news);
-		
+		findViews();
+		setListeners();
+		showNewsFromIntent();
+	}
+	
+	private void findViews()
+	{
 		tvViewNewsTitle = (TextView) findViewById( R.id.tvViewNewsTitle );
 		tvViewNewsDatetime = (TextView) findViewById( R.id.tvViewNewsDatetime );
 		tvViewNewsContent = (TextView) findViewById( R.id.tvViewNewsContent );
+		ll_nidEnter = findViewById( R.id.ll_nidEnter );
 		etNid = (EditText) findViewById( R.id.etNid );
 		btNid = (Button) findViewById( R.id.btNid );
 		inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		
+	}
+	
+	private void setListeners()
+	{
 		btNid.setOnClickListener(btNidClick);
 		etNid.setOnEditorActionListener(etNidOnEnter);
+	}
+	
+	private void showNewsFromIntent()
+	{
+		try{
+			Bundle bundle = this.getIntent().getExtras();
+			int nid = bundle.getInt("NID");
+			if(nid == 0) return ;
+			showNews(nid);
+			ll_nidEnter.setVisibility(View.GONE); 
+		}
+		catch(Exception e)
+		{
+			Log.e(ACTIVITY_TAG,e.toString());
+		}
+	}
+	
+	private void showNews(int nid)
+	{
+		try{
+			// 檢查 NID 的正確性
+			if(nid == 0) throw new Exception("Nid Can't be zero.");
+			String jsonHtml = getUriContent( "http://news.taichunmin.idv.tw/nchucs_news/ajax.php?get=news&nid=" + nid );
+			// 檢查從伺服器取得的 json 不為空
+			if(jsonHtml.length()==0) throw new Exception("Server didn't send json data.");
+			JSONObject jsonObject = new JSONObject(jsonHtml);
+			// 確認 json 中不含錯誤訊息
+			if(!jsonObject.isNull("error"))
+				throw new Exception("Server Error.");
+			// 檢查 news 的數量
+			if(jsonObject.getString("newsCnt").equals("0"))
+				throw new Exception("No match news.");
+			
+			// 取得新聞的 json Object
+			JSONArray jsonArray = jsonObject.getJSONArray("news");
+			// 只取一個，正常來說需要用迴圈
+			JSONObject news = jsonArray.getJSONObject(0);
+			
+			// 設定顯示
+			tvViewNewsTitle.setText(news.getString("title"));
+			tvViewNewsDatetime.setText(news.getString("news_t"));
+			// 增加換行
+			tvViewNewsContent.setText("\n　　"+news.getString("article").replace("\n", "\n\n　　"));
+			
+			// 隱藏軟體鍵盤
+			inputManager.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+		}
+		catch( Exception e )
+		{
+			Log.e(ACTIVITY_TAG,e.toString());
+		}
 	}
 
 	@Override
@@ -92,37 +155,11 @@ public class ViewNews extends Activity {
 			try
 			{
 				int nid = Integer.parseInt(etNid.getText().toString());
-				// 檢查 NID 的正確性
-				if(nid == 0) throw new Exception("Nid Can't be zero.");
-				String jsonHtml = getUriContent( "http://news.taichunmin.idv.tw/nchucs_news/ajax.php?get=news&nid=" + nid );
-				// 檢查從伺服器取得的 json 不為空
-				if(jsonHtml.length()==0) throw new Exception("Server didn't send json data.");
-				JSONObject jsonObject = new JSONObject(jsonHtml);
-				// 確認 json 中不含錯誤訊息
-				if(!jsonObject.isNull("error"))
-					throw new Exception("Server Error.");
-				// 檢查 news 的數量
-				if(jsonObject.getString("newsCnt").equals("0"))
-					throw new Exception("No match news.");
-				
-				// 取得新聞的 json Object
-				JSONArray jsonArray = jsonObject.getJSONArray("news");
-				// 只取一個，正常來說需要用迴圈
-				JSONObject news = jsonArray.getJSONObject(0);
-				
-				// 設定顯示
-				tvViewNewsTitle.setText(news.getString("title"));
-				tvViewNewsDatetime.setText(news.getString("news_t"));
-				// 增加換行
-				tvViewNewsContent.setText("\n　　"+news.getString("article").replace("\n", "\n\n　　"));
-				
-				// 隱藏軟體鍵盤
-				inputManager.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+				showNews(nid);
 			}
 			catch( Exception e )
 			{
-				tvViewNewsContent.setText("錯誤：有什麼東西錯誤了。\n\nNID: " + etNid.getText().toString()+ "\n\n" + e.toString().replaceFirst("java.lang.Exception: ", ""));
-				// 顯示錯誤訊息，而且不要顯示 java.lang.Exception: 的文字(過於常見)
+				Log.e(ACTIVITY_TAG,e.toString());
 			}
 		}
 	};
