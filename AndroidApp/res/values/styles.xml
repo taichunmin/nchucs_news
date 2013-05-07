@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
+    <style name="AppBaseTheme" parent="android:Theme.Black.NoTitleBar">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -23,5 +23,24 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">16dp</item>
     </style>
-
+	
+    <style name="fontsize_xsmall">
+        <item name="android:padding">1sp</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+	
+    <style name="fontsize_small">
+        <item name="android:padding">1sp</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+	
+    <style name="fontsize_normal">
+        <item name="android:padding">2sp</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+	
+    <style name="fontsize_large">
+        <item name="android:padding">4sp</item>
+        <item name="android:textSize">30sp</item>
+    </style>
 </resources>

@@ -9,7 +9,7 @@ import android.widget.Button;
 
 public class MainActivity extends Activity {
 	
-	Button btn_view_news, btn_login;
+	Button btn_view_news, btn_login, btn_news_list;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +30,14 @@ public class MainActivity extends Activity {
 	{
 		btn_view_news = (Button) findViewById( R.id.btn_view_news );
 		btn_login = (Button) findViewById( R.id.btn_login );
+		btn_news_list = (Button) findViewById( R.id.btn_news_list );
 	}
 	
 	private void setListeners()
 	{
 		btn_view_news.setOnClickListener(listen_view_news);
 		btn_login.setOnClickListener(listen_login);
+		btn_news_list.setOnClickListener(listen_news_list);
 	}
 
 	private Button.OnClickListener listen_view_news = new Button.OnClickListener()
@@ -51,6 +53,14 @@ public class MainActivity extends Activity {
 		@Override
 		public void onClick(View v) {
 			startActivity( new Intent().setClass(MainActivity.this, LoginActivity.class) );
+		}
+	};
+
+	private Button.OnClickListener listen_news_list = new Button.OnClickListener()
+	{
+		@Override
+		public void onClick(View v) {
+			startActivity( new Intent().setClass(MainActivity.this, NewsList.class) );
 		}
 	};
 	
