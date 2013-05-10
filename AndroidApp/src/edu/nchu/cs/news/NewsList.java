@@ -2,17 +2,21 @@ package edu.nchu.cs.news;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class NewsList extends Activity {
 
 	private static final String ACTIVITY_TAG="NewsList";
 	RelativeLayout rl_newsListItem1;
+	LayoutInflater inflater;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +30,7 @@ public class NewsList extends Activity {
 	{
 		rl_newsListItem1 = (RelativeLayout) findViewById(R.id.rl_newsListItem1);
 		rl_newsListItem1.setTag(123);
+		inflater = (LayoutInflater) getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 	}
 	
 	private void setListeners()
@@ -59,4 +64,19 @@ public class NewsList extends Activity {
 			}
 		}
 	};
+	
+	private void makeNewsGUI(int nid)
+	{
+		View ListItemView = inflater.inflate(R.layout.new_news_list_view, null);
+		
+		TextView tv_newsItemDate = (TextView) ListItemView.findViewById(R.id.tv_newsItemDate),
+				 tv_newsItemTitle = (TextView) ListItemView.findViewById(R.id.tv_newsItemTitle);
+		
+		// Get Data
+		
+		tv_newsItemTitle.setText("");
+		tv_newsItemDate.setText("");
+		
+		ListItemView.setTag(nid);
+	}
 }

@@ -11,6 +11,7 @@
 
 	<TextView
 		style="@style/fontsize_small"
+		android:id="@+id/tv_newsItemTitle"
 		android:textColor="#111"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -20,6 +21,7 @@
 
 	<TextView
 		style="@style/fontsize_xsmall"
+		android:id="@+id/tv_newsItemDate"
 		android:textColor="#111"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -34,6 +36,7 @@
 		android:layout_height="match_parent"
 		android:layout_alignParentRight="true"
 		android:layout_alignParentTop="true"
+		android:contentDescription="@string/viewNews"
 		android:layout_gravity="center_vertical"
 		android:layout_marginRight="10sp"
 		android:src="@drawable/play_icon" />
