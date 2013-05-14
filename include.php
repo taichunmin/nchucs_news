@@ -14,31 +14,14 @@
 		'pageListSize' => 7,
 		'debug' => 1,
 	);
-	// 設定不同主機資料庫之設定
-	switch($_SERVER['HTTP_HOST'])
-	{
-	case '127.0.0.1':
-		$cfg['dbHost'] = 'news.taichunmin.idv.tw';
-		$cfg['dbUser'] = 'nchucsnews';
-		$cfg['dbPass'] = 't5KthfzGKpts4ctc';
-		$cfg['dbDatabase'] = 'nchucsnews';
-		// mysqldump -u root -p nchucsnews > db.sql
-		break;
-	default:
-		$cfg['dbHost'] = 'localhost';
-		$cfg['dbUser'] = 'nchucsnews';
-		$cfg['dbPass'] = 't5KthfzGKpts4ctc';
-		$cfg['dbDatabase'] = 'nchucsnews';
-		// mysqldump -u root -p nchucsnews > db.sql
-		break;
-	}
+	require('db.php');	// Just database setting
 	function tai_mysqlConnect()	// 連接資料庫
 	{
 		global $cfg;
 		if(!mysql_connect($cfg['dbHost'],$cfg['dbUser'],$cfg['dbPass']))
 		{
 			if($cfg['debug'])die( mysql_error());
-			else die("Connect mysql failed! 1");
+			else die("Connect mysql failed! Please Check 'db.php' FILE");
 		}
 		@mysql_set_charset('utf8');	// 設定字元集宇連線校對
 		@mysql_query('SET CHARACTER_SET_CLIENT=utf8');

@@ -56,6 +56,8 @@
 	$sql = "select c.nid,c.title,c.`news_t` from `today_$rand` as a left join `viewlog` as b on b.uid='{$ses->uid}' and a.nid=b.nid left join `news` as c on a.nid=c.nid where b.nid is null order by `news_t` desc";
 		//echo $sql.'<br />';
 	$rcmdRes = mysql_query($sql);
+	if(mysql_num_rows($rcmdRes)==0)
+		tai_location('index.php');
 //==================================================================================================
 ?>
 	<ul data-role="listview" data-filter="true">
