@@ -29,7 +29,7 @@ switch($_GET['act'])
 case 'fliter':
 	$get = array();
 	foreach(array('rid','date') as $field)
-		if( isset( $field ) )
+		if( isset( $_GET[$field] ) )
 		{
 			switch($field)
 			{
@@ -45,7 +45,7 @@ case 'fliter':
 		}
 	if(count($get)==0) tai_location('index.php');
 	echo '<ul data-role="listview" data-filter="true">';
-	// 檢查 $_GET['date']
+	// 組合 SQL
 	$sql_where = array();
 	if(isset($get['date'])) $sql_where[] .= " LEFT(`news_t`,10)='{$get['date']}' ";
 	if(isset($get['rid'])) $sql_where[] .= " `rid`='{$get['rid']}' ";

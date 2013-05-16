@@ -59,8 +59,7 @@ try{
 	switch($req['get'])
 	{
 	case 'news': // 取得新聞
-		if( !$token->uid )	// 未登入，不給使用
-			throw new Exception('Need token.');
+		// ajax.php?get=news&nid=123&debug=1
 		if( preg_match('/^\d+(,\d+)*$/',$req['nid']))
 		{
 			$sql = "select * from news where nid in ({$req['nid']})";
@@ -75,6 +74,8 @@ try{
 		break;
 	case 'rss': // 取得新聞分類
 	case 'category':
+		// ajax.php?get=rss&debug=1
+		// rss 
 		if( isset($req['rid']) && !preg_match('/^\d+(,\d+)*$/',$req['rid']))
 			throw new Exception('The '.$req['get'].' rid incorrect.');
 		$sql = "select * from `rss`";
@@ -90,6 +91,7 @@ try{
 		@mysql_free_result($rssRes);
 		break;
 	case 'today': // 取得今日推薦清單
+		// ajax.php?get=today&debug=1&token=c98fe35ed782c91b928f71481d5d99761ff55969&limit=1
 		if( !$token->uid )	// 未登入，不給使用
 			throw new Exception('Need token.');
 		$get = $_GET;
@@ -98,6 +100,7 @@ try{
 			'simi_2st' => array( 'pattern' => '/^\d+$/', 'default' => 30 ),
 			'simi_3st' => array( 'pattern' => '/^\d+$/', 'default' => 10 ),
 			'onto_limit' => array( 'pattern' => '/^\d+$/', 'default' => 100 ),
+			'limit' => array( 'pattern' => '/^\d+$/', 'default' => 1000 ),	// 新增限制
 		);
 		foreach( $checkGet as $k => $o )
 			if( !preg_match( $o['pattern'], $get[$k]) )
@@ -134,16 +137,43 @@ try{
 		
 		// 開始對暫時 TABLE 中的新聞做處理
 		// 先濾除使用者已看過的新聞，再依照時間排序
-		$sql = "select c.nid,c.title,c.`news_t` from `today_$rand` as a left join `viewlog` as b on b.uid='{$ses->uid}' and a.nid=b.nid left join `news` as c on a.nid=c.nid where b.nid is null order by `news_t` desc";
+		$sql = "select c.nid,c.title,c.`news_t` from `today_$rand` as a left join `viewlog` as b on b.uid='{$ses->uid}' and a.nid=b.nid left join `news` as c on a.nid=c.nid where b.nid is null order by `news_t` desc limit {$get['limit']}";	// 新增限制
 		//echo $sql.'<br />';
 		$rcmdRes = mysql_query($sql);
 		$data['listCnt'] = mysql_num_rows($rcmdRes);
 		$data['listType'] = 'today';
 		while( $rcmdRow = mysql_fetch_assoc($rcmdRes) )
 			$data['list'][] = $rcmdRow;
+		@mysql_free_result($rcmdRes);
 		break;
 	case 'list':
+		// ajax.php?get=list&debug=1&rid=2&date=2012-12-24&limit=1
+		// ajax.php?get=list&debug=1&rid=2&limit=1
+		// ajax.php?get=list&debug=1&date=2012-12-24&limit=1
+		$get = $_GET;
+		if( !$dck->uint($get['rid']) )
+			unset($get['rid']);
+		if( !$dck->date($get['date']) )
+			unset($get['date']);
 		
+		$listType = isset($get['date'])*2 + isset($get['rid']);
+		if( $listType == 0 ) // 必須要指定任何一個
+			throw new Exception('Need rid or date.');
+		$listTypeArray = array('', 'category', 'date', 'categoryAndDate');
+		$data['listType'] = $listTypeArray[$listType];
+		if( !preg_match('/^\d+$/',$get['limit']) )
+			$get['limit'] = 1000;
+		
+		// 組合 sql
+		$sql_where = array();
+		if(isset($get['date'])) $sql_where[] .= " LEFT(`news_t`,10)='{$get['date']}' ";
+		if(isset($get['rid'])) $sql_where[] .= " `rid`='{$get['rid']}' ";
+		$sql = "select `nid`,`title`,`news_t` from `news` where ".implode('and',$sql_where)." order by `news_t` desc limit {$get['limit']}";
+		$newsRes = mysql_query($sql);
+		$data['listCnt'] = mysql_num_rows($newsRes);
+		while( $newsRow = mysql_fetch_assoc($newsRes) )
+			$data['list'][] = $newsRow;
+		@mysql_free_result($newsRes);
 		break;
 	default:
 		throw new Exception('The get is not support.');
