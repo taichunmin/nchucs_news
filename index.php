@@ -2,7 +2,7 @@
 	include_once("include.php");
 	if( $_GET['act']=='logout' )
 	{
-		unset($ses->uid);
+		$ses->clear();
 		tai_location();
 	}
 	if( isset( $_POST['submit'] ))

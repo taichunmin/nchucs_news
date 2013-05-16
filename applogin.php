@@ -15,7 +15,7 @@ try
 	tai_mysqlExec($sql);
 	
 	// escape string
-	$post = array_map('mysql_real_escape_string', $_REQUEST);
+	$post = array_map('mysql_real_escape_string', $_POST); // _REQUEST
 	
 	// email and password check
 	if( !isset($post['email']) || empty($post['email']) )
@@ -50,7 +50,7 @@ try
 	// 產生 Token，並將資訊存回資料庫
 	global $token;
 	$token = new session_C();
-	$token->prefix('nchucsnewsToken');
+	$token->prefix('nchucsnewsToken_');
 	$token->uid = $userRow['uid'];
 	$tokenCnt = 0;
 	while( true )
@@ -66,7 +66,9 @@ try
 }
 catch( Exception $e )
 {
-	$data['error'] = $e->getMessage();
+	$data['error'][] = $e->getMessage();
+	// error 必為 array
 }
+$token->clear();	// 清空 token 紀錄
 die(json_encode($data));
 ?>
