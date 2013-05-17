@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:background="@drawable/background_white"
+	android:background="@drawable/background_lightblue"
 	android:layout_height="50sp"
 	android:layout_width="match_parent" >
 
