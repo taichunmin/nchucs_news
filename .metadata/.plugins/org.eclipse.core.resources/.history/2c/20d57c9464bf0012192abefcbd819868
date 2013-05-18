@@ -1,0 +1,5 @@
+package edu.nchu.cs.news;
+
+public class NewsDbConnector {
+
+}

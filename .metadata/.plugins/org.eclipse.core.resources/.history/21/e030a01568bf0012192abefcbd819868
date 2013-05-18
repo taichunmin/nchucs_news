@@ -1,0 +1,49 @@
+package edu.nchu.cs.news;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import edu.nchu.cs.news.NewsDbHelper;
+
+
+public class NewsDbConnector {
+	
+	private SQLiteDatabase mNewsDbRW;
+	
+	private static final String DB_NAME = "nchucsnews",
+								DB_SYS_TABLE = "system",
+								DB_NEWS_TABLE = "news_cache";
+	
+	public NewsDbConnector(Context context){
+		NewsDbHelper newsDbHp =  new NewsDbHelper(context, DB_NAME,
+        		null, 1);
+
+		newsDbHp.sCreateTableCommand = "CREATE TABLE " + DB_SYS_TABLE + "(" +
+				"_id INTEGER PRIMARY NOT NULL KEY AUTO_INCREMENT," +
+				"name VARCHAR(50) NOT NULL," +
+				"value VARCHAR(50) NOT NULL," +
+				"COLLATE='utf8_unicode_ci';";
+
+		mNewsDbRW = newsDbHp.getWritableDatabase();
+		
+		newsDbHp.sCreateTableCommand = "CREATE TABLE " + DB_SYS_TABLE + "(" +
+				"_id INTEGER PRIMARY NOT NULL KEY AUTO_INCREMENT," +
+				"title VARCHAR(50) NOT NULL," +
+				"content TEXT NOT NULL," +
+				"createdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP )" +
+				"COLLATE='utf8_unicode_ci';";
+
+		mNewsDbRW = newsDbHp.getWritableDatabase();		
+		
+	}
+
+	public void open() throws SQLException {
+		mNewsDbRW = newsDbHp.g.getWritableDatabase();
+	}
+	
+	
+	
+	
+}

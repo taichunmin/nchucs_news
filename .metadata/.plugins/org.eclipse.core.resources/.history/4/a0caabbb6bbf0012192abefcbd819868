@@ -1,0 +1,103 @@
+package edu.nchu.cs.news;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import edu.nchu.cs.news.NewsDbHelper;
+
+
+
+public class NewsDbConnector {
+	
+	private SQLiteDatabase mNewsDbRW;
+	private NewsDbHelper newsDbHp; // database helper
+	
+	private static final String DB_NAME = "nchucsnews",
+								DB_SYS_TABLE = "system",
+								DB_NEWS_TABLE = "news_cache";
+	
+	public NewsDbConnector(Context context){
+		newsDbHp =  new NewsDbHelper(context, DB_NAME, null, 1);
+
+		newsDbHp.sCreateTableCommand = "CREATE TABLE " + DB_SYS_TABLE + "(" +
+				"sys_id INTEGER PRIMARY NOT NULL KEY AUTO_INCREMENT," +
+				"name VARCHAR(50) NOT NULL," +
+				"value VARCHAR(50) NOT NULL," +
+				"COLLATE='utf8_unicode_ci';";
+
+		mNewsDbRW = newsDbHp.getWritableDatabase();
+		mNewsDbRW.close();
+		
+		newsDbHp.sCreateTableCommand = "CREATE TABLE " + DB_NEWS_TABLE + "(" +
+				"news_id INTEGER PRIMARY NOT NULL KEY AUTO_INCREMENT," +
+				"title VARCHAR(50) NOT NULL," +
+				"content TEXT NOT NULL," +
+				"createdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP )" +
+				"COLLATE='utf8_unicode_ci';";
+
+		mNewsDbRW = newsDbHp.getWritableDatabase();		
+		mNewsDbRW.close();
+	}
+
+	public void open(String type) throws SQLException {
+		if (type == "r")
+			mNewsDbRW = newsDbHp.getReadableDatabase();
+		else if (type == "w")
+			mNewsDbRW = newsDbHp.getWritableDatabase();
+		else
+			return;
+	}
+	
+	public void close() {
+		if (mNewsDbRW != null)
+			mNewsDbRW.close(); // close the database connection
+	}	
+	
+	public void systemPut(String name, String value){
+		ContentValues newRow = new ContentValues();
+		
+		newRow.put("name", name);
+        newRow.put("value", name);
+        
+        open();
+        mNewsDbRW.insertOrThrow(DB_SYS_TABLE, null, newRow);
+        close();
+	}
+
+	public void newsPut(String title, String content){
+		ContentValues newRow = new ContentValues();
+		
+		newRow.put("name", title);
+        newRow.put("value", content);
+        
+        
+        open();
+        mNewsDbRW.insertOrThrow(DB_NEWS_TABLE, null, newRow);
+        close();
+	}	
+	
+	public void systemSet(String _id, String name, String value){
+		ContentValues newRow = new ContentValues();
+		
+		newRow.put("name", name);
+        newRow.put("value", name);
+        
+        open();
+        mNewsDbRW.update(DB_SYS_TABLE, newRow, "sys_id=?", new String[] { _id });
+        close();
+	}
+
+	public void newsSet(String _id, String title, String content){
+		ContentValues newRow = new ContentValues();
+		
+		newRow.put("name", title);
+        newRow.put("value", content);
+        
+        
+        open();
+        mNewsDbRW.update(DB_NEWS_TABLE, newRow, "news_id=?", new String[] { _id });
+        close();
+	}	
+}

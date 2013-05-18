@@ -1,0 +1,2 @@
+INDEX VERSION 1.126+E:\Github\nchucs_news\.metadata\.plugins\org.eclipse.jdt.core
+1725617083.index

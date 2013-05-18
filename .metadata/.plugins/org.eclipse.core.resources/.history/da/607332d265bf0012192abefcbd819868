@@ -1,0 +1,28 @@
+package edu.nchu.cs.news;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.SQLException;
+import edu.nchu.cs.news.NewsDbHelper;
+
+public class NewsDbConnector {
+	
+	
+	private static final String DB_NAME = "nchucsnews";
+	public NewsDbConnector(){
+		NewsDbHelper mNewsDbRW =  new NewsDbHelper(getApplicationContext(), DB_NAME,
+        		null, 1);
+	}
+	
+	private Context getApplicationContext() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	 
+
+	
+	
+	
+	
+}
