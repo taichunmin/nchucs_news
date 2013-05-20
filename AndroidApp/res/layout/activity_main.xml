@@ -1,31 +1,242 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/background_default"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/background_default"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/btn_view_news"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/tv_menuTitle"
+        style="@style/fontsize_large"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="view_news" />
+        android:background="@drawable/gradient_green"
+        android:text="@string/app_name"
+        android:textColor="#111" />
 
-    <Button
-        android:id="@+id/btn_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="login" />
- 
-    <Button
-        android:id="@+id/btn_news_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="news_list" />
- 
-    <Button
-        android:id="@+id/btn_filter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="filter" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:id="@+id/ll_mainBtnGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <RelativeLayout
+                    android:layout_width="100sp"
+                    android:layout_height="100sp"
+                    android:layout_marginBottom="0sp"
+                    android:layout_marginLeft="5sp"
+                    android:layout_marginRight="0sp"
+                    android:layout_marginTop="5sp"
+                    android:background="@drawable/menubtn_white"
+                    android:clickable="true" >
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="60sp"
+                        android:layout_alignParentTop="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="0sp"
+                        android:src="@drawable/top_icon" />
+
+                    <TextView
+                        style="@style/fontsize_normal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="0dp"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="今日推薦"
+                        android:textColor="#000" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="100sp"
+                    android:layout_height="100sp"
+                    android:layout_marginBottom="0sp"
+                    android:layout_marginLeft="5sp"
+                    android:layout_marginRight="0sp"
+                    android:layout_marginTop="5sp"
+                    android:background="@drawable/menubtn_white"
+                    android:clickable="true" >
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="60sp"
+                        android:layout_alignParentTop="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="0sp"
+                        android:src="@drawable/about_icon" />
+
+                    <TextView
+                        style="@style/fontsize_normal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="0dp"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="關於"
+                        android:textColor="#000" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <RelativeLayout
+                    android:layout_width="100sp"
+                    android:layout_height="100sp"
+                    android:layout_marginBottom="0sp"
+                    android:layout_marginLeft="5sp"
+                    android:layout_marginRight="0sp"
+                    android:layout_marginTop="5sp"
+                    android:background="@drawable/menubtn_white"
+                    android:clickable="true" >
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="60sp"
+                        android:layout_alignParentTop="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="0sp"
+                        android:src="@drawable/date_icon" />
+
+                    <TextView
+                        style="@style/fontsize_normal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="0dp"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="日期篩選"
+                        android:textColor="#000" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="100sp"
+                    android:layout_height="100sp"
+                    android:layout_marginBottom="0sp"
+                    android:layout_marginLeft="5sp"
+                    android:layout_marginRight="0sp"
+                    android:layout_marginTop="5sp"
+                    android:background="@drawable/menubtn_white"
+                    android:clickable="true" >
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="60sp"
+                        android:layout_alignParentTop="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="0sp"
+                        android:src="@drawable/category_icon" />
+
+                    <TextView
+                        style="@style/fontsize_normal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="0dp"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="分類篩選"
+                        android:textColor="#000" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5sp" >
+
+                <RelativeLayout
+                    android:layout_width="100sp"
+                    android:layout_height="100sp"
+                    android:layout_marginBottom="0sp"
+                    android:layout_marginLeft="5sp"
+                    android:layout_marginRight="0sp"
+                    android:layout_marginTop="5sp"
+                    android:background="@drawable/menubtn_white"
+                    android:clickable="true" >
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="60sp"
+                        android:layout_alignParentTop="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="0sp"
+                        android:src="@drawable/setting_icon" />
+
+                    <TextView
+                        style="@style/fontsize_normal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="0dp"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="設定"
+                        android:textColor="#000" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="100sp"
+                    android:layout_height="100sp"
+                    android:layout_marginBottom="0sp"
+                    android:layout_marginLeft="5sp"
+                    android:layout_marginRight="0sp"
+                    android:layout_marginTop="5sp"
+                    android:background="@drawable/menubtn_white"
+                    android:clickable="true" >
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="60sp"
+                        android:layout_alignParentTop="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="0sp"
+                        android:src="@drawable/logout_icon" />
+
+                    <TextView
+                        style="@style/fontsize_normal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="0dp"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="登出"
+                        android:textColor="#000" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_view_news"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="view_news" />
+
+            <Button
+                android:id="@+id/btn_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="login" />
+
+            <Button
+                android:id="@+id/btn_news_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="news_list" />
+
+            <Button
+                android:id="@+id/btn_filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="filter" />
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
