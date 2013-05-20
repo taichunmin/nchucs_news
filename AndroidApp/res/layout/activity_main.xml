@@ -28,6 +28,7 @@
                 android:layout_height="wrap_content" >
 
                 <RelativeLayout
+                    android:id="@+id/rl_btnToday"
                     android:layout_width="100sp"
                     android:layout_height="100sp"
                     android:layout_marginBottom="0sp"
@@ -57,6 +58,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/rl_btnAbout"
                     android:layout_width="100sp"
                     android:layout_height="100sp"
                     android:layout_marginBottom="0sp"
@@ -91,6 +93,7 @@
                 android:layout_height="wrap_content" >
 
                 <RelativeLayout
+                    android:id="@+id/rl_btnDateFliter"
                     android:layout_width="100sp"
                     android:layout_height="100sp"
                     android:layout_marginBottom="0sp"
@@ -120,6 +123,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/rl_btnCategoryFilter"
                     android:layout_width="100sp"
                     android:layout_height="100sp"
                     android:layout_marginBottom="0sp"
@@ -155,6 +159,7 @@
                 android:layout_marginBottom="5sp" >
 
                 <RelativeLayout
+                    android:id="@+id/rl_btnSetting"
                     android:layout_width="100sp"
                     android:layout_height="100sp"
                     android:layout_marginBottom="0sp"
@@ -184,6 +189,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/rl_btnLogout"
                     android:layout_width="100sp"
                     android:layout_height="100sp"
                     android:layout_marginBottom="0sp"
@@ -213,6 +219,16 @@
                 </RelativeLayout>
             </LinearLayout>
 
+            <TextView
+                style="@style/fontsize_normal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="0dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:text=""
+                android:textColor="#000" />
+
             <Button
                 android:id="@+id/btn_view_news"
                 android:layout_width="wrap_content"
@@ -224,12 +240,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="login" />
-
-            <Button
-                android:id="@+id/btn_news_list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="news_list" />
 
             <Button
                 android:id="@+id/btn_filter"

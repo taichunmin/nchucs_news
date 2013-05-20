@@ -14,12 +14,12 @@ import android.widget.TextView;
 
 public class NewsList extends Activity {
 
-	private static final String ACTIVITY_TAG="NewsList";
+	private static final String ACTIVITY_TAG = "NewsList";
 	private RelativeLayout rl_newsListItem1;
 	private LayoutInflater inflater;
 	private TextView tv_newsListTitle;
 	private int ListType = 0; // 0=today, 1=date, 2=cateDay
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -28,47 +28,41 @@ public class NewsList extends Activity {
 		setListeners();
 		processIntent();
 	}
-	
-	private void processIntent()
-	{
-		try
-		{
+
+	private void processIntent() {
+		try {
 			Bundle bundle = this.getIntent().getExtras();
 			String ListTypeStr = null;
-			if(bundle != null)
+			if (bundle != null)
 				ListTypeStr = bundle.getString("LIST_TYPE");
-			if(ListTypeStr == null) ListTypeStr = "today";
-			if(ListTypeStr.equals("date"))
-			{
+			if (ListTypeStr == null)
+				ListTypeStr = "today";
+			if (ListTypeStr.equals("date")) {
 				ListType = 1;
-				// tv_newsListTitle.setText( getText(R.string.list_type_today) );
-			}
-			else if(ListTypeStr.equals("categoryAndDate"))
-			{
+				// tv_newsListTitle.setText( getText(R.string.list_type_today)
+				// );
+			} else if (ListTypeStr.equals("category")) {
 				ListType = 2;
-				// tv_newsListTitle.setText( getText(R.string.list_type_today) );
-			}
-			else throw new Exception("");
-		}
-		catch(Exception e)
-		{
-			if(e.getMessage().length()!=0)
+				// tv_newsListTitle.setText( getText(R.string.list_type_today)
+				// );
+			} else
+				throw new Exception("");
+		} catch (Exception e) {
+			if (e.getMessage().length() != 0)
 				Log.e(ACTIVITY_TAG, e.getMessage());
-			tv_newsListTitle.setText( getText(R.string.list_type_today) );
+			tv_newsListTitle.setText(getText(R.string.list_type_today));
 			ListType = 0;
 		}
 	}
-	
-	private void findViews()
-	{
+
+	private void findViews() {
 		rl_newsListItem1 = (RelativeLayout) findViewById(R.id.rl_newsListItem1);
 		tv_newsListTitle = (TextView) findViewById(R.id.tv_newsListTitle);
 		rl_newsListItem1.setTag(123);
-		inflater = (LayoutInflater) getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+		inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
-	
-	private void setListeners()
-	{
+
+	private void setListeners() {
 		rl_newsListItem1.setOnClickListener(clickViewNews);
 	}
 
@@ -78,12 +72,11 @@ public class NewsList extends Activity {
 		getMenuInflater().inflate(R.menu.news_list, menu);
 		return true;
 	}
-	
-	private View.OnClickListener clickViewNews = new View.OnClickListener()
-	{
+
+	private View.OnClickListener clickViewNews = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			try{
+			try {
 				int nid = (Integer) v.getTag();
 				Intent intent = new Intent();
 				intent.setClass(NewsList.this, ViewNews.class);
@@ -91,26 +84,24 @@ public class NewsList extends Activity {
 				bundle.putInt("NID", nid);
 				intent.putExtras(bundle);
 				startActivity(intent);
-			}
-			catch(Exception e)
-			{
+			} catch (Exception e) {
 				Log.e(ACTIVITY_TAG, e.toString());
 			}
 		}
 	};
-	
-	private void makeNewsGUI(int nid)
-	{
+
+	private void makeNewsGUI(int nid) {
 		View ListItemView = inflater.inflate(R.layout.new_news_list_view, null);
-		
-		TextView tv_newsItemDate = (TextView) ListItemView.findViewById(R.id.tv_newsItemDate),
-				 tv_newsItemTitle = (TextView) ListItemView.findViewById(R.id.tv_newsItemTitle);
-		
+
+		TextView tv_newsItemDate = (TextView) ListItemView
+				.findViewById(R.id.tv_newsItemDate), tv_newsItemTitle = (TextView) ListItemView
+				.findViewById(R.id.tv_newsItemTitle);
+
 		// Get Data
-		
+
 		tv_newsItemTitle.setText("");
 		tv_newsItemDate.setText("");
-		
+
 		ListItemView.setTag(nid);
 	}
 }
