@@ -1,44 +1,39 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:background="@drawable/background_lightblue"
-	android:layout_height="50sp"
-	android:layout_width="match_parent" >
+    android:id="@+id/rl_newsListItem1"
+    android:layout_width="match_parent"
+    android:layout_height="50sp"
+    android:background="@drawable/bar_white" >
 
-	<View
-		android:layout_width="fill_parent"
-		android:layout_height="1dp"
-		android:background="#000" />
+    <TextView
+        android:id="@+id/tv_newsItemTitle"
+        style="@style/fontsize_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="營收2位數年成長 華碩有信心"
+        android:textColor="#111" />
 
-	<TextView
-		style="@style/fontsize_small"
-		android:id="@+id/tv_newsItemTitle"
-		android:textColor="#111"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentLeft="true"
-		android:layout_alignParentTop="true"
-		android:text="" />
+    <TextView
+        android:id="@+id/tv_newsItemDate"
+        style="@style/fontsize_xsmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="3sp"
+        android:layout_marginLeft="3sp"
+        android:text="2013-05-06 21:44:27"
+        android:textColor="#111" />
 
-	<TextView
-		style="@style/fontsize_xsmall"
-		android:id="@+id/tv_newsItemDate"
-		android:textColor="#111"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentLeft="true"
-		android:layout_alignParentBottom="true"
-		android:layout_marginLeft="3sp"
-		android:layout_marginBottom="3sp"
-		android:text="" />
-
-	<ImageView
-		android:layout_width="30sp"
-		android:layout_height="match_parent"
-		android:layout_alignParentRight="true"
-		android:layout_alignParentTop="true"
-		android:contentDescription="@string/viewNews"
-		android:layout_gravity="center_vertical"
-		android:layout_marginRight="10sp"
-		android:src="@drawable/play_icon" />
+    <ImageView
+        android:layout_width="30sp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="5sp"
+        android:src="@drawable/play_icon" />
 
 </RelativeLayout>

@@ -1,0 +1,71 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_default"
+    android:orientation="vertical"
+    tools:context=".FilterActivity" >
+
+    <TextView
+        android:id="@+id/tv_filterTitle"
+        style="@style/fontsize_large"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradient_lightblue"
+        android:text="TextView"
+        android:textColor="#111" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" >
+
+        <LinearLayout
+            android:id="@+id/ll_newsListContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:id="@+id/rl_newsListItem1"
+                android:layout_width="match_parent"
+                android:layout_height="50sp"
+                android:background="@drawable/bar_white" >
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="30sp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="5sp"
+                    android:src="@drawable/play_icon" />
+
+                <TextView
+                    android:id="@+id/textView1"
+                    style="@style/fontsize_xsmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5sp"
+                    android:layout_toLeftOf="@+id/imageView1"
+                    android:background="@drawable/bubble_white"
+                    android:padding="5sp"
+                    android:text="12345"
+                    android:textColor="#111" />
+
+                <TextView
+                    style="@style/fontsize_normal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="2013-05-19"
+                    android:textColor="#111" />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

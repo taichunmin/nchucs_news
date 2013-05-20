@@ -38,6 +38,10 @@
             android:name="edu.nchu.cs.news.NewsList"
             android:label="@string/title_activity_news_list" >
         </activity>
+        <activity
+            android:name="edu.nchu.cs.news.FilterActivity"
+            android:label="@string/title_activity_filter" >
+        </activity>
     </application>
 
 </manifest>

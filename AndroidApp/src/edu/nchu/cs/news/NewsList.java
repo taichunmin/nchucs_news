@@ -15,8 +15,10 @@ import android.widget.TextView;
 public class NewsList extends Activity {
 
 	private static final String ACTIVITY_TAG="NewsList";
-	RelativeLayout rl_newsListItem1;
-	LayoutInflater inflater;
+	private RelativeLayout rl_newsListItem1;
+	private LayoutInflater inflater;
+	private TextView tv_newsListTitle;
+	private int ListType = 0; // 0=today, 1=date, 2=cateDay
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +26,43 @@ public class NewsList extends Activity {
 		setContentView(R.layout.activity_news_list);
 		findViews();
 		setListeners();
+		processIntent();
+	}
+	
+	private void processIntent()
+	{
+		try
+		{
+			Bundle bundle = this.getIntent().getExtras();
+			String ListTypeStr = null;
+			if(bundle != null)
+				ListTypeStr = bundle.getString("LIST_TYPE");
+			if(ListTypeStr == null) ListTypeStr = "today";
+			if(ListTypeStr.equals("date"))
+			{
+				ListType = 1;
+				// tv_newsListTitle.setText( getText(R.string.list_type_today) );
+			}
+			else if(ListTypeStr.equals("categoryAndDate"))
+			{
+				ListType = 2;
+				// tv_newsListTitle.setText( getText(R.string.list_type_today) );
+			}
+			else throw new Exception("");
+		}
+		catch(Exception e)
+		{
+			if(e.getMessage().length()!=0)
+				Log.e(ACTIVITY_TAG, e.getMessage());
+			tv_newsListTitle.setText( getText(R.string.list_type_today) );
+			ListType = 0;
+		}
 	}
 	
 	private void findViews()
 	{
 		rl_newsListItem1 = (RelativeLayout) findViewById(R.id.rl_newsListItem1);
+		tv_newsListTitle = (TextView) findViewById(R.id.tv_newsListTitle);
 		rl_newsListItem1.setTag(123);
 		inflater = (LayoutInflater) getSystemService( Context.LAYOUT_INFLATER_SERVICE );
 	}
