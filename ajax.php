@@ -146,6 +146,39 @@ try{
 			$data['list'][] = $rcmdRow;
 		@mysql_free_result($rcmdRes);
 		break;
+	case 'cnt':
+		// ajax.php?get=cnt&group=rid&debug=1
+		// ajax.php?get=cnt&group=date&debug=1
+		// ajax.php?get=cnt&rid=1&debug=1
+		// ajax.php?get=cnt&date=2012-12-01&debug=1
+		if( ! $dck->date($req['date']) )
+			unset($req['date']);
+		if( ! $dck->uint($req['rid']) )
+			unset($req['rid']);
+		if( !empty($req['group']) && !in_array($req['group'], array('rid','date')) )
+			unset($req['group']);
+		if( !( empty($req['date']) ^ empty($req['rid']) ) )
+		{
+			if( !empty($req['date']) )
+				throw new Exception('You can not assign date and rid at the same time.');
+			else if(empty($req['group']))
+				throw new Exception('Need group argument.');
+		}
+		
+		if(isset($req['date']))
+			$sql = "select `rid`,count(*) as 'cnt' from `news` where left(`news_t`,10)='{$req['date']}' group by `rid` ";
+		else if(isset($req['rid']))
+			$sql = "select * from (select left(`news_t`,10) as 'date', count(*) as 'cnt' from `news` where `rid`='{$req['rid']}' group by `date`) as a order by a.date desc ";
+		else if($req['group']=='date')
+			$sql = "select left(`news_t`,10) as 'date',count(*) as 'cnt' from `news` group by left(`news_t`,10)";
+		else $sql = "select `rid`,count(*) as 'cnt' from `news` group by `rid`";
+		
+		$res = mysql_query($sql);
+		$data['cntCnt'] = mysql_num_rows($res);
+		while( $row = mysql_fetch_assoc($res) )
+			$data['cnt'][] = $row;
+		@mysql_free_result($res);
+		break;
 	case 'list':
 		// ajax.php?get=list&debug=1&rid=2&date=2012-12-24&limit=1
 		// ajax.php?get=list&debug=1&rid=2&limit=1
