@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <item>
-        <shape android:shape="rectangle" >
-            <solid android:color="#000" />
-        </shape>
-    </item>
-    <item
-        android:drawable="@drawable/gradient_white"
-        android:top="1sp" />
-
-</layer-list>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true"
+        android:drawable="@drawable/bar_white_press" />
+    <item android:drawable="@drawable/bar_white_normal" />
+</selector>

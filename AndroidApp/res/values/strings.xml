@@ -13,6 +13,6 @@
     <string name="title_activity_filter">FilterActivity</string>
     <string name="list_type_today">今日推薦</string>
     <string name="filter_date">日期篩選</string>
-    <string name="filter_rid">分類塞選</string>
+    <string name="filter_rid">分類篩選</string>
 
 </resources>

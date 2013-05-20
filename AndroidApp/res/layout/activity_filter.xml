@@ -30,7 +30,8 @@
                 android:id="@+id/rl_newsListItem1"
                 android:layout_width="match_parent"
                 android:layout_height="50sp"
-                android:background="@drawable/bar_white" >
+                android:background="@drawable/bar_white"
+                android:clickable="true" >
 
                 <ImageView
                     android:id="@+id/imageView1"
@@ -64,7 +65,6 @@
                     android:text="2013-05-19"
                     android:textColor="#111" />
             </RelativeLayout>
-
         </LinearLayout>
     </ScrollView>
 

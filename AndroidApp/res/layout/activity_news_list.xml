@@ -28,7 +28,8 @@
                 android:id="@+id/rl_newsListItem1"
                 android:layout_width="match_parent"
                 android:layout_height="50sp"
-                android:background="@drawable/bar_white" >
+                android:background="@drawable/bar_white"
+                android:clickable="true" >
 
                 <TextView
                     style="@style/fontsize_small"
@@ -64,7 +65,8 @@
                 android:id="@+id/rl_newsListItem2"
                 android:layout_width="match_parent"
                 android:layout_height="50sp"
-                android:background="@drawable/bar_white" >
+                android:background="@drawable/bar_white"
+                android:clickable="true" >
 
                 <TextView
                     style="@style/fontsize_small"
