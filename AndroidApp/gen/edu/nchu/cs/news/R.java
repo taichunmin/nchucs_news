@@ -56,36 +56,41 @@ public final class R {
         public static final int top_icon=0x7f02001c;
     }
     public static final class id {
-        public static final int action_forgot_password=0x7f09001d;
-        public static final int action_settings=0x7f09001c;
-        public static final int btNid=0x7f090016;
-        public static final int btn_filter=0x7f090011;
-        public static final int btn_login=0x7f09000f;
-        public static final int btn_news_list=0x7f090010;
-        public static final int btn_view_news=0x7f09000e;
+        public static final int action_forgot_password=0x7f090022;
+        public static final int action_settings=0x7f090021;
+        public static final int btNid=0x7f09001b;
+        public static final int btn_filter=0x7f090016;
+        public static final int btn_login=0x7f090015;
+        public static final int btn_view_news=0x7f090014;
         public static final int email=0x7f090008;
-        public static final int etNid=0x7f090015;
+        public static final int etNid=0x7f09001a;
         public static final int imageView1=0x7f090003;
         public static final int ll_mainBtnGroup=0x7f09000d;
         public static final int ll_newsListContent=0x7f090001;
-        public static final int ll_nidEnter=0x7f090014;
+        public static final int ll_nidEnter=0x7f090019;
         public static final int login=0x7f09000a;
         public static final int login_form=0x7f090007;
         public static final int login_status=0x7f090005;
         public static final int login_status_message=0x7f090006;
         public static final int password=0x7f090009;
+        public static final int rl_btnAbout=0x7f09000f;
+        public static final int rl_btnCategoryFilter=0x7f090011;
+        public static final int rl_btnDateFliter=0x7f090010;
+        public static final int rl_btnLogout=0x7f090013;
+        public static final int rl_btnSetting=0x7f090012;
+        public static final int rl_btnToday=0x7f09000e;
         public static final int rl_newsListItem1=0x7f090002;
-        public static final int rl_newsListItem2=0x7f090013;
+        public static final int rl_newsListItem2=0x7f090018;
         public static final int sign_in_button=0x7f09000b;
         public static final int textView1=0x7f090004;
-        public static final int tvViewNewsContent=0x7f090019;
-        public static final int tvViewNewsDatetime=0x7f090018;
-        public static final int tvViewNewsTitle=0x7f090017;
+        public static final int tvViewNewsContent=0x7f09001e;
+        public static final int tvViewNewsDatetime=0x7f09001d;
+        public static final int tvViewNewsTitle=0x7f09001c;
         public static final int tv_filterTitle=0x7f090000;
         public static final int tv_menuTitle=0x7f09000c;
-        public static final int tv_newsItemDate=0x7f09001b;
-        public static final int tv_newsItemTitle=0x7f09001a;
-        public static final int tv_newsListTitle=0x7f090012;
+        public static final int tv_newsItemDate=0x7f090020;
+        public static final int tv_newsItemTitle=0x7f09001f;
+        public static final int tv_newsListTitle=0x7f090017;
     }
     public static final class layout {
         public static final int activity_filter=0x7f030000;
@@ -103,25 +108,27 @@ public final class R {
         public static final int view_news=0x7f080004;
     }
     public static final class string {
-        public static final int action_forgot_password=0x7f060010;
+        public static final int action_forgot_password=0x7f060012;
         public static final int action_settings=0x7f060001;
-        public static final int action_sign_in_register=0x7f06000e;
-        public static final int action_sign_in_short=0x7f06000f;
+        public static final int action_sign_in_register=0x7f060010;
+        public static final int action_sign_in_short=0x7f060011;
         public static final int app_name=0x7f060000;
-        public static final int error_field_required=0x7f060015;
-        public static final int error_incorrect_password=0x7f060014;
-        public static final int error_invalid_email=0x7f060012;
-        public static final int error_invalid_password=0x7f060013;
+        public static final int error_field_required=0x7f060017;
+        public static final int error_incorrect_password=0x7f060016;
+        public static final int error_invalid_email=0x7f060014;
+        public static final int error_invalid_password=0x7f060015;
+        public static final int filter_date=0x7f06000b;
+        public static final int filter_rid=0x7f06000c;
         public static final int hello_world=0x7f060002;
-        public static final int list_type_today=0x7f060009;
-        public static final int login_progress_signing_in=0x7f060011;
+        public static final int list_type_today=0x7f06000a;
+        public static final int login_progress_signing_in=0x7f060013;
         /**  Strings related to login 
          */
-        public static final int prompt_email=0x7f06000c;
-        public static final int prompt_password=0x7f06000d;
+        public static final int prompt_email=0x7f06000e;
+        public static final int prompt_password=0x7f06000f;
         public static final int sViewNewsTitle=0x7f060003;
-        public static final int title_activity_filter=0x7f06000a;
-        public static final int title_activity_login=0x7f06000b;
+        public static final int title_activity_filter=0x7f060009;
+        public static final int title_activity_login=0x7f06000d;
         public static final int title_activity_news_list=0x7f060008;
         public static final int viewNews=0x7f060004;
         public static final int viewNewsContentEmpty=0x7f060007;
