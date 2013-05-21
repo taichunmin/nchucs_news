@@ -97,13 +97,6 @@
                     android:layout_marginRight="5sp"
                     android:src="@drawable/play_icon" />
             </RelativeLayout>
-
-            <ProgressBar
-                android:id="@+id/progressBar1"
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
         </LinearLayout>
     </ScrollView>
 

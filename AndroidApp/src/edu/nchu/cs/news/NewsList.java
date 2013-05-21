@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,7 +17,6 @@ public class NewsList extends Activity {
 	private static final String ACTIVITY_TAG = "NewsList";
 	private RelativeLayout rl_newsListItem1;
 	private LayoutInflater inflater;
-	private LinearLayout ll_newsListContent;
 	private TextView tv_newsListTitle;
 	private int ListType = 0; // 0=today, 1=date, 2=cateDay
 
@@ -61,7 +59,6 @@ public class NewsList extends Activity {
 		rl_newsListItem1 = (RelativeLayout) findViewById(R.id.rl_newsListItem1);
 		tv_newsListTitle = (TextView) findViewById(R.id.tv_newsListTitle);
 		rl_newsListItem1.setTag(123);
-		ll_newsListContent = (LinearLayout) findViewById(R.id.ll_newsListContent);
 		inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
@@ -93,15 +90,15 @@ public class NewsList extends Activity {
 		}
 	};
 
-	private void addNewsListGUI(int nid) {
+	private void makeNewsGUI(int nid) {
 		View ListItemView = inflater.inflate(R.layout.new_news_list_view, null);
 
-		TextView tv_newsItemDate = (TextView) ListItemView.findViewById(R.id.tv_newsItemDate),
-				tv_newsItemTitle = (TextView) ListItemView.findViewById(R.id.tv_newsItemTitle);
+		TextView tv_newsItemDate = (TextView) ListItemView
+				.findViewById(R.id.tv_newsItemDate), tv_newsItemTitle = (TextView) ListItemView
+				.findViewById(R.id.tv_newsItemTitle);
 
 		// Get Data
-		
-		ListItemView.setOnClickListener(clickViewNews);
+
 		tv_newsItemTitle.setText("");
 		tv_newsItemDate.setText("");
 
