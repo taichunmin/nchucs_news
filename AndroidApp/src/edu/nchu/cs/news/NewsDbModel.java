@@ -35,12 +35,12 @@ public class NewsDbModel {
         return get_list(url);
     }
 
-    public Object newslist_day(String date) throws JSONException, Exception {
+    public ArrayList<HashMap<String, String>> newslist_day(String date) throws JSONException, Exception {
         String url = "get=list&date=" + date;
         return get_list(url);
     } 
 
-    public Object newslist_cate_day(int rid, String date) throws JSONException, Exception {
+    public ArrayList<HashMap<String, String>> newslist_cate_day(int rid, String date) throws JSONException, Exception {
         String url = "get=list&rid=" + rid + "&date=" + date;
         return get_list(url);
     }
@@ -99,11 +99,11 @@ public class NewsDbModel {
         int cnt = list.size();
         String nid = "0";
 
-         for(int i=0;i<cnt;i++) {
-            Map<String, String> map = list.get(i);
-            nid = map.get("nid");
-            cache_news(nid);
-         }
+        for(int i=0;i<cnt;i++) {
+           Map<String, String> map = list.get(i);
+           nid = map.get("nid");
+           cache_news(nid);
+        }
 
     }
 
