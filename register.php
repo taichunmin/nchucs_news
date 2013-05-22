@@ -1,5 +1,5 @@
 <?php
-	include_once("header.php");
+	include_once("include.php");
 	if( $ses->uid )
 		tai_location('index.php');
 	if( isset($_POST['submit']) )
@@ -46,9 +46,12 @@
 			$post['pass'] = sha1($post['pass']);
 			$sql = "insert into `user` (`".implode('`,`',array_keys($post))."`) values ('".implode("','",$post)."')";
 			tai_mysqlExec($sql);
-			tai_location('index.php');
+			if(empty($_GET['app']))
+				tai_location('index.php');
+			else die('alert("感謝您的註冊，請按回到應用程式登入。")');
 		}
 	}
+	include_once("header.php");
 ?>
 	<div data-role="page" id="register" class="type-interior" data-add-back-btn="true">
 		<div data-role="header" data-position="fixed">
@@ -84,7 +87,7 @@
 
 				em { color: red; font-weight: bold; padding-right: .25em; }
 			</style>
-			<form action="register.php" method="post" id="form_register" data-ajax="false">
+			<form action="register.php<?php if($_GET['app']==1) echo '?app=1'; ?>" method="post" id="form_register" data-ajax="false">
 				<label for="email">電子郵件</label>
 				<input type="email" name="email" id="email" value="<?php echo $_POST['email']; ?>" />
 				<label for="pass">密碼</label>

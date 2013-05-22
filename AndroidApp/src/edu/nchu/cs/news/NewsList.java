@@ -1,6 +1,12 @@
 package edu.nchu.cs.news;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,17 +16,22 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class NewsList extends Activity {
 
 	private static final String ACTIVITY_TAG = "NewsList";
+	private ProgressBar circleProgressBar;
 	private RelativeLayout rl_newsListItem1;
 	private LayoutInflater inflater;
 	private LinearLayout ll_newsListContent;
 	private TextView tv_newsListTitle;
 	private int ListType = 0; // 0=today, 1=date, 2=cateDay
+	protected static final int handle_addNewsList = 0x10001;
+	private ArrayList<HashMap<String, String>> newsItems = null;
+	private NewsDataModel newsDataModel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +74,8 @@ public class NewsList extends Activity {
 		rl_newsListItem1.setTag(123);
 		ll_newsListContent = (LinearLayout) findViewById(R.id.ll_newsListContent);
 		inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		circleProgressBar = (ProgressBar) findViewById(R.id.circleProgressBar);
+		newsDataModel = new NewsDataModel(this);
 	}
 
 	private void setListeners() {
@@ -80,11 +93,10 @@ public class NewsList extends Activity {
 		@Override
 		public void onClick(View v) {
 			try {
-				int nid = (Integer) v.getTag();
 				Intent intent = new Intent();
 				intent.setClass(NewsList.this, ViewNews.class);
 				Bundle bundle = new Bundle();
-				bundle.putInt("NID", nid);
+				bundle.putString("NID", (String) v.getTag());
 				intent.putExtras(bundle);
 				startActivity(intent);
 			} catch (Exception e) {
@@ -93,18 +105,78 @@ public class NewsList extends Activity {
 		}
 	};
 
+	@SuppressLint("HandlerLeak")
+	private Handler mHandler = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case handle_addNewsList:
+				break;
+			}
+		}
+	};
+
 	private void addNewsListGUI(int nid) {
-		View ListItemView = inflater.inflate(R.layout.new_news_list_view, null);
 
-		TextView tv_newsItemDate = (TextView) ListItemView.findViewById(R.id.tv_newsItemDate),
-				tv_newsItemTitle = (TextView) ListItemView.findViewById(R.id.tv_newsItemTitle);
+		showProgressBar();
 
-		// Get Data
-		
-		ListItemView.setOnClickListener(clickViewNews);
-		tv_newsItemTitle.setText("");
-		tv_newsItemDate.setText("");
+		Thread mThread = new Thread(new Runnable() {
 
-		ListItemView.setTag(nid);
+			public void run() {
+				try {
+					switch (ListType) {
+					case 0: // today
+						newsItems = newsDataModel.newslist_today();
+						break;
+					case 1: // day
+						newsItems = newsDataModel.newslist_day("2012-12-01");
+						break;
+					case 2: // category
+						newsItems = newsDataModel.newslist_cate(Integer
+								.parseInt("1000"));
+						break;
+					}
+					Message msg = new Message();
+					msg.what = handle_addNewsList;
+					mHandler.sendMessage(msg);
+				} catch (Exception e) {
+					Log.e(ACTIVITY_TAG, e.getMessage());
+				}
+			}
+		});
+		mThread.start();
+	}
+
+	private void addNewsListGUIHandle() {
+		if (newsItems == null) {
+			Log.e(ACTIVITY_TAG, "addNewsListGUIHandle null error.");
+		}
+		for (int i = 0; i < newsItems.size(); i++) {
+			HashMap<String, String> item = (HashMap<String, String>) newsItems
+					.get(i);
+			View ListItemView = inflater.inflate(R.layout.new_news_list_view,
+					null);
+
+			TextView tv_newsItemDate = (TextView) ListItemView
+					.findViewById(R.id.tv_newsItemDate), tv_newsItemTitle = (TextView) ListItemView
+					.findViewById(R.id.tv_newsItemTitle);
+
+			ListItemView.setOnClickListener(clickViewNews);
+			ListItemView.setTag(item.get("nid"));
+			tv_newsItemTitle.setText(item.get("title"));
+			tv_newsItemDate.setText(item.get("date"));
+
+			ll_newsListContent.addView(ListItemView);
+		}
+		newsItems = null;
+		hideProgressBar();
+	}
+
+	private void showProgressBar() {
+		circleProgressBar.setVisibility(View.VISIBLE);
+		circleProgressBar.setProgress(0);
+	}
+
+	private void hideProgressBar() {
+		circleProgressBar.setVisibility(View.GONE);
 	}
 }

@@ -1,13 +1,30 @@
 package edu.nchu.cs.news;
 
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.*;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -21,16 +38,10 @@ import android.widget.TextView;
  */
 public class LoginActivity extends Activity {
 	/**
-	 * A dummy authentication store containing known user names and passwords.
-	 * TODO: remove after connecting to a real authentication system.
-	 */
-	private static final String[] DUMMY_CREDENTIALS = new String[] {
-			"foo@example.com:hello", "bar@example.com:world" };
-
-	/**
 	 * The default email to populate the email field with.
 	 */
 	public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
+	public static final String ACTIVITY_TAG = "LoginActivity";
 
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
@@ -48,12 +59,15 @@ public class LoginActivity extends Activity {
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
 
+	private NewsDataModel newsDataModel;
+	private final String LOGIN_POST_PAGE = "http://news.taichunmin.idv.tw/nchucs_news/applogin.php";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_login);
-
+ 		newsDataModel = new NewsDataModel(this);
 		// Set up the login form.
 		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
 		mEmailView = (EditText) findViewById(R.id.email);
@@ -84,6 +98,19 @@ public class LoginActivity extends Activity {
 						attemptLogin();
 					}
 				});
+
+		findViewById(R.id.register_button).setOnClickListener(
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						String urlString = "http://news.taichunmin.idv.tw/nchucs_news/register.php?app=1";
+						Intent getURL = new Intent(Intent.ACTION_VIEW, Uri.parse(urlString));
+						startActivity(getURL);
+					}
+		});	
+		
+		// 預設鄧出
+		newsDataModel.system_argu("token", "");
 	}
 
 	@Override
@@ -143,7 +170,7 @@ public class LoginActivity extends Activity {
 			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 			showProgress(true);
 			mAuthTask = new UserLoginTask();
-			mAuthTask.execute((Void) null);
+			mAuthTask.execute(mEmail, mPassword);
 		}
 	}
 
@@ -192,27 +219,56 @@ public class LoginActivity extends Activity {
 	 * Represents an asynchronous login/registration task used to authenticate
 	 * the user.
 	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+	public class UserLoginTask extends AsyncTask<String, Void, Boolean> {
 		@Override
-		protected Boolean doInBackground(Void... params) {
-			// TODO: 對網路服務取得認證
+		protected Boolean doInBackground(String... params) {
 
-			try {
-				// 同步網路(雲端？)存取
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
+			HttpClient client = new DefaultHttpClient();
+			HttpPost post = new HttpPost(LOGIN_POST_PAGE);
+			StringBuilder sb = new StringBuilder();
+			try{
+				Log.e(ACTIVITY_TAG, "email="+params[0]);
+				Log.e(ACTIVITY_TAG, "pass="+params[1]);
+				// 網路驗證進程
+				List<NameValuePair> pairs = new ArrayList<NameValuePair>(1);
+				pairs.add(new BasicNameValuePair("email",params[0]));
+				pairs.add(new BasicNameValuePair("pass", params[1]));
+				post.setEntity(new UrlEncodedFormEntity(pairs));
+				HttpResponse response = client.execute(post);
+				HttpEntity entity = response.getEntity();
+				InputStream ips = entity.getContent();
+				BufferedReader buf = new BufferedReader(new InputStreamReader(ips,"UTF-8"));
+				String s;
+				while(true)
+				{
+					s = buf.readLine();
+					if(s==null) break;
+					sb.append(s);
+				}
+				buf.close();
+				ips.close();
+				Log.d(ACTIVITY_TAG, "sb=" + sb.toString());
+	            
+	            JSONObject obj = new JSONObject(sb.toString());
+				newsDataModel.system_argu("token",obj.getString("token"));
+			} 
+			catch(ClientProtocolException e) {
+				e.printStackTrace();
+				return false;
+			} 
+			catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			} 
+			catch (JSONException e) {
+				// 登入錯誤睡眠兩秒
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e1) {
+					Log.e(ACTIVITY_TAG, e1.getMessage());
+				}
 				return false;
 			}
-
-			for (String credential : DUMMY_CREDENTIALS) {
-				String[] pieces = credential.split(":");
-				if (pieces[0].equals(mEmail)) {
-					// 帳戶存在，若密碼符合則回傳True
-					return pieces[1].equals(mPassword);
-				}
-			}
-
-			// TODO: 在這裡新增“註冊帳號”的功能
 			return true;
 		}
 
@@ -222,7 +278,9 @@ public class LoginActivity extends Activity {
 			showProgress(false);
 
 			if (success) {
-				finish();
+				//finish();
+				startActivity(new Intent().setClass(LoginActivity.this,
+						MainActivity.class));
 			} else {
 				mPasswordView
 						.setError(getString(R.string.error_incorrect_password));

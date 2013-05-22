@@ -2,8 +2,7 @@
 <resources>
 
     <string name="app_name">新聞推薦系統</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">設定</string>
     <string name="sViewNewsTitle">標題：</string>
     <string name="viewNews">查看新聞</string>
     <string name="viewNewsDatetime">時間：</string>
@@ -14,5 +13,14 @@
     <string name="list_type_today">今日推薦</string>
     <string name="filter_date">日期篩選</string>
     <string name="filter_rid">分類篩選</string>
+    <string name="logoutConfirm">分類篩選</string>
+    <string name="confirmLogoutMessage">確定要登出嗎？</string>
+    <string name="title_activity_about">關於</string>
+    <string name="about0">關於：新聞推推樂</string>
+    <string name="about">\t\t網路普及與資訊服務的蓬勃發展，使得網路上的資料量越來越大，如何有效的擷取出有意義的資訊是一項大課題，所以搜尋或推薦系統在目前網路服務研究上受到重視。 為了讓讀者可以快速地獲得自己有興趣的新聞，本專題研究主要探討針對讀者找出其閱報喜好進而快速尋找近期可能喜好的新聞文章，提出一個基於個人本體論的新聞推薦模式(RO-NRS, News Recommender System based on Personal Ontology)。</string>
+    <string name="about2">\t\t以個人本體論為基礎，更引進了Hadoop平行運算，透過Hadoop平台提供的 MapReduce 架構，利用Tamer Elsayed等人於2008年所提的Inverted Index方法於MapReduce架構實作協同式過濾方法。</string>
+    <string name="crew1">技術組：戴均民、林書緯</string>
+    <string name="crew2">文件組：朱奕安、許芳甄</string>
+    <string name="email">Issue Report: \n\t taichunmin@gmail.com</string>
 
 </resources>

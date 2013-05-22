@@ -21,48 +21,31 @@ public class NewsDbConnector {
 	private SQLiteDatabase mNewsDbRW;
 	private NewsDbHelper newsDbHp; // database helper
 	
-	private static final String DB_NAME = "nchucsnews",
+	private static final String DB_NAME = "nchucsnews.db",
 								DB_SYS_TABLE = "system",
 								DB_NEWS_TABLE = "news_cache",
-								ACTIVITY_TAG = "Database";
+								ACTIVITY_TAG = "NewsDbConnector";
+	private final int _DBVersion = 3;
+	
+	
 	
 	public NewsDbConnector(Context context){
-		newsDbHp =  new NewsDbHelper(context, DB_NAME, null, 1);
-
-		newsDbHp.sCreateTableCommand = "CREATE TABLE " + DB_SYS_TABLE + "(" +
-				"sys_id INTEGER PRIMARY NOT NULL KEY AUTO_INCREMENT," +
-				"index VARCHAR(50) NOT NULL," +
-				"value VARCHAR(50) NOT NULL," +
-				"COLLATE='utf8_unicode_ci';";
-
-		mNewsDbRW = newsDbHp.getWritableDatabase();
-		mNewsDbRW.close();
-		
-		newsDbHp.sCreateTableCommand = "CREATE TABLE " + DB_NEWS_TABLE + "(" +
-				"news_id INTEGER PRIMARY NOT NULL KEY AUTO_INCREMENT," +
-				"title VARCHAR(50) NOT NULL," +
-				"content TEXT NOT NULL," +
-				"createdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP )" +
-				"COLLATE='utf8_unicode_ci';";
-
-		mNewsDbRW = newsDbHp.getWritableDatabase();		
-		mNewsDbRW.close();
-
+		newsDbHp = new NewsDbHelper(context, DB_NAME, null, _DBVersion);
 		initial();
 	}
 
 	private void initial() {
-		systemPut("token", "0");
-		systemPut("limit_per_page", "200");
-		systemPut("cache_exist_time", "3");
-		systemPut("simi_1st", "60");
-		systemPut("simi_1st", "30");
-		systemPut("simi_1st", "10");
-		systemPut("onto_limit", "100");
+		String sql = "insert or ignore into " + DB_SYS_TABLE + " (`index`,`value`) values ";
+		String[] sysName = {"token", "limit_per_page", "cache_exist_time", "simi_1st", "simi_2st", "simi_3st", "onto_limit"},
+				 sysValue = {"", "200", "3", "60", "30", "10", "100"};
+		dbOpen("w");
+		for(int i=0; i<sysName.length && i<sysValue.length; i++)
+			mNewsDbRW.execSQL(sql + "('" + sysName[i] + "','" + sysValue[i] + "');");
+		dbClose();
+			
 	}
 
 	public void dbOpen(String type) throws SQLException {
-
 		try {
 			if (type == "r")
 				mNewsDbRW = newsDbHp.getReadableDatabase();
@@ -71,9 +54,9 @@ public class NewsDbConnector {
 			else {}
 		}
         catch( Exception e ) {
-            Log.e(ACTIVITY_TAG,e.toString());
+        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
         }
-
 	}
 	
 	public void dbClose() {
@@ -83,7 +66,8 @@ public class NewsDbConnector {
 				mNewsDbRW.close(); // close the database connection
 		}
         catch( Exception e ) {
-            Log.e(ACTIVITY_TAG,e.toString());
+        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
         }
 	}	
 	
@@ -92,8 +76,8 @@ public class NewsDbConnector {
 		try{
 			ContentValues newRow = new ContentValues();
 		
-			newRow.put("index", index);
-	        newRow.put("value", value);
+			newRow.put("`index`", index);
+	        newRow.put("`value`", value);
 	        
 	        dbOpen("r");
 	        mNewsDbRW.insertOrThrow(DB_SYS_TABLE, null, newRow);
@@ -101,11 +85,12 @@ public class NewsDbConnector {
 
         }
         catch( Exception e ) {
-            Log.e(ACTIVITY_TAG,e.toString());
+        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
         }
 	}
 
-	public void newsPut(Map<String, String> map){
+	public void newsPut(HashMap<String, String> map){
 		
 		try {
 			ContentValues newRow = new ContentValues();
@@ -121,8 +106,9 @@ public class NewsDbConnector {
 	        dbClose();
 		}
         catch( Exception e ) {
-            Log.e(ACTIVITY_TAG,e.toString());
-        }	        
+        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
+        }
 	}	
 	
 	public void systemSet(String index, String value){
@@ -133,7 +119,7 @@ public class NewsDbConnector {
 	        newRow.put("value", value);
 	        
 	        dbOpen("r");
-	        mNewsDbRW.update(DB_SYS_TABLE, newRow, "index=?", new String[] { index });
+	        mNewsDbRW.update(DB_SYS_TABLE, newRow, " `index`=?", new String[] { index });
 	        dbClose();
 		}
         catch( Exception e ) {
@@ -152,23 +138,25 @@ public class NewsDbConnector {
 			newRow.put("url", url);
 		    
 		    dbOpen("r");
-		    mNewsDbRW.update(DB_NEWS_TABLE, newRow, "_id=?", new String[] { _id });
+		    mNewsDbRW.update(DB_NEWS_TABLE, newRow, "`_id`=?", new String[] { _id });
 		    dbClose();
 		}
         catch( Exception e ) {
-            Log.e(ACTIVITY_TAG,e.toString());
-        }		    
+        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
+        }
 	}
 	
 	public void systemDelByIndex(String index){
 
 		try {		
 	        dbOpen("r");
-	        mNewsDbRW.delete(DB_SYS_TABLE, "index=?", new String[] { index });
+	        mNewsDbRW.delete(DB_SYS_TABLE, "`index`=?", new String[] { index });
 	        dbClose();
 	    }
         catch( Exception e ) {
-            Log.e(ACTIVITY_TAG,e.toString());
+        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
         }
 	}
 
@@ -176,28 +164,28 @@ public class NewsDbConnector {
 
 		try {
 	        dbOpen("r");
-	        mNewsDbRW.delete(DB_NEWS_TABLE, "_id=?", new String[] { _id });
+	        mNewsDbRW.delete(DB_NEWS_TABLE, "`_id`=?", new String[] { _id });
 	        dbClose();
 	    }
         catch( Exception e ) {
-            Log.e(ACTIVITY_TAG,e.toString());
+        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
         }
 	}		
 	
 	public String systemGetByIndex(String index){
 
-		Map<String, String> map = new HashMap<String, String>();
+		HashMap<String, String> map = new HashMap<String, String>();
 		try {
 			
 
 			dbOpen("r");
 	        Cursor cursor = mNewsDbRW.rawQuery(
-	                "select _id, index, value from " + DB_SYS_TABLE + "where index=?",
+	                "select `index`, `value` from " + DB_SYS_TABLE + " where `index`=?",
 	                new String[]{index});
 		 	while (cursor.moveToNext()) {
-			 	map.put("id",      	cursor.getString(0));
-	            map.put("index",	cursor.getString(1));
-	            map.put("value",    cursor.getString(2));
+	            map.put("index",	cursor.getString(0));
+	            map.put("value",    cursor.getString(1));
 			}
 			cursor.close();
 			dbClose();
@@ -205,20 +193,21 @@ public class NewsDbConnector {
 			
 		}
         catch( Exception e ) {
-            Log.e(ACTIVITY_TAG,e.toString());
+        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
         }
 		return map.get("value");
 	}
 
-	public Map<String, String> newsGetById(int nid){
+	public HashMap<String, String> newsGetById(int nid){
 
 		String _id = ""+nid;
-		Map<String, String> map = new HashMap<String, String>();
+		HashMap<String, String> map = new HashMap<String, String>();
 		try {
 
 	        dbOpen("r");
 	        Cursor cursor = mNewsDbRW.rawQuery(
-	                "select _id, title, content, url, date, cache_time from " + DB_NEWS_TABLE + "where _id=?",
+	                "select `_id`, `title`, `content`, `url`, `date`, `cache_time` from " + DB_NEWS_TABLE + " where `_id`=?",
 	                new String[]{_id});
 			while (cursor.moveToNext()) {
 				map.put("_id",      	cursor.getString(0));
@@ -233,7 +222,8 @@ public class NewsDbConnector {
 
 		}
         catch( Exception e ) {
-            Log.e(ACTIVITY_TAG,e.toString());
+        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
         }
 		return map;
 	}	
@@ -249,17 +239,17 @@ public class NewsDbConnector {
 
 	        dbOpen("r");
 	        Cursor cursor = mNewsDbRW.rawQuery(
-	                "select _id from " + DB_NEWS_TABLE + "where cache_time<=?",
+	                "select `_id` from " + DB_NEWS_TABLE + " where `cache_time`<=?",
 	                new String[]{date});
 			while (cursor.moveToNext()) {
 				list.add(cursor.getString(0));
 			}
 			cursor.close();
 			dbClose();
-
 		}
         catch( Exception e ) {
-            Log.e(ACTIVITY_TAG,e.toString());
+        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
         }
 		return list;
     }

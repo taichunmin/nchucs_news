@@ -2,7 +2,9 @@ package edu.nchu.cs.news;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
@@ -32,7 +34,7 @@ public class MainActivity extends Activity {
 		setAllBtnSquare(ll_mainBtnGroup);
 		setListeners();
 
-		if (true) {
+		if (false) {
 			// if login
 			Toast.makeText(getApplicationContext(), "使用返回鍵回到主選單",
 					Toast.LENGTH_SHORT).show();
@@ -90,7 +92,7 @@ public class MainActivity extends Activity {
 		rl_btnDateFliter.setOnClickListener(listen_btnDateFliter);
 		rl_btnCategoryFilter.setOnClickListener(listen_btnCategoryFilter);
 		// rl_btnSetting.setOnClickListener(listen_btnSetting);
-		// rl_btnLogout.setOnClickListener(listen_btnLogout);
+		rl_btnLogout.setOnClickListener(listen_btnLogout);
 	}
 
 	private void gotoLogin() {
@@ -163,6 +165,32 @@ public class MainActivity extends Activity {
 			bundle.putString("FILTER", "rid");
 			startActivity(new Intent().setClass(MainActivity.this,
 					FilterActivity.class).putExtras(bundle));
+		}
+	};
+
+	private View.OnClickListener listen_btnLogout = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(
+					MainActivity.this);
+			builder.setTitle(R.string.logoutConfirm);
+			builder.setPositiveButton(android.R.string.yes,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							startActivity(new Intent().setClass(
+									MainActivity.this, LoginActivity.class));
+						}
+					});
+			builder.setCancelable(true);
+			builder.setNegativeButton(android.R.string.no, null);
+			
+			builder.setMessage(R.string.confirmLogoutMessage);
+			
+			AlertDialog confirmDialog = builder.create();
+			confirmDialog.show();
 		}
 	};
 
