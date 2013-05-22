@@ -19,29 +19,34 @@ import android.content.Context;
 import android.util.Log;
 
 
-public class NewsDbModel {
+public class NewsDataModel {
     
     private NewsDbConnector db;
     private static final String ACTIVITY_TAG = "Database";
 
-    public void NewsDataModel(Context context){
+    public NewsDataModel(Context context){
         db = new NewsDbConnector(context);
         del_cache_over_time();
     }
 
     public ArrayList<HashMap<String, String>> newslist_today() throws JSONException, Exception {
-        String token = db.systemGetByIndex("index");
+        String token = db.systemGetByIndex("token");
         String url = "get=today&token=" + token ;
         return get_list(url);
     }
 
-    public Object newslist_day(String date) throws JSONException, Exception {
+    public ArrayList<HashMap<String, String>> newslist_day(String date) throws JSONException, Exception {
         String url = "get=list&date=" + date;
         return get_list(url);
     } 
 
-    public Object newslist_cate_day(int rid, String date) throws JSONException, Exception {
+    public ArrayList<HashMap<String, String>> newslist_cate_day(int rid, String date) throws JSONException, Exception {
         String url = "get=list&rid=" + rid + "&date=" + date;
+        return get_list(url);
+    }
+
+    public ArrayList<HashMap<String, String>> newslist_cate(int rid) throws JSONException, Exception {
+        String url = "get=list&rid=" + rid;
         return get_list(url);
     }
 
@@ -61,8 +66,8 @@ public class NewsDbModel {
             JSONObject obj = jsonArray.getJSONObject(i);
 
             Map<String, String> map = new HashMap<String, String>();
-            map.put("date",      obj.getString("date"));
-            map.put("cnt",    obj.getString("cnt"));
+            map.put("date", obj.getString("date"));
+            map.put("cnt",  obj.getString("cnt"));
             list.add((HashMap<String, String>) map);
         }
 
