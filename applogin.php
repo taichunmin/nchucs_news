@@ -63,12 +63,12 @@ try
 	}
 	$data['uid'] = $token->uid;
 	$data['token'] = $token->token;
+	$token->clear();	// 清空 token 紀錄
 }
 catch( Exception $e )
 {
 	$data['error'][] = $e->getMessage();
 	// error 必為 array
 }
-$token->clear();	// 清空 token 紀錄
 die(json_encode($data));
 ?>
