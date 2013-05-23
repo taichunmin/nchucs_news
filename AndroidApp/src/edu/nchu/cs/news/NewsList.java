@@ -30,6 +30,7 @@ public class NewsList extends Activity {
 	protected static final int handle_addNewsList = 0x10001;
 	private ArrayList<HashMap<String, String>> newsItems = null;
 	private NewsDataModel newsDataModel;
+	private String filterData = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +51,12 @@ public class NewsList extends Activity {
 				ListTypeStr = "today";
 			if (ListTypeStr.equals("date")) {
 				ListType = 1;
-				tv_newsListTitle.setText(bundle.getString("DATA"));
-			} else if (ListTypeStr.equals("category")) {
+				tv_newsListTitle.setText(bundle.getString("TITLE"));
+				filterData = bundle.getString("DATA");
+			} else if (ListTypeStr.equals("rid")) {
 				ListType = 2;
-				tv_newsListTitle.setText(bundle.getString("DATA"));
+				tv_newsListTitle.setText(bundle.getString("TITLE"));
+				filterData = bundle.getString("DATA");
 			} else
 				throw new Exception("");
 		} catch (Exception e) {
@@ -62,7 +65,6 @@ public class NewsList extends Activity {
 			tv_newsListTitle.setText(getText(R.string.list_type_today));
 			ListType = 0;
 		}
-		Log.d("taichunmin","debug");
 		addNewsListGUI();
 	}
 
@@ -124,11 +126,10 @@ public class NewsList extends Activity {
 						newsItems = newsDataModel.newslist_today();
 						break;
 					case 1: // day
-						newsItems = newsDataModel.newslist_day("2012-12-01");
+						newsItems = newsDataModel.newslist_day(filterData);
 						break;
 					case 2: // category
-						newsItems = newsDataModel.newslist_cate(Integer
-								.parseInt("1000"));
+						newsItems = newsDataModel.newslist_cate(Integer.parseInt(filterData));
 						break;
 					}
 					Message msg = new Message();

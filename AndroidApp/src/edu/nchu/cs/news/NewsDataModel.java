@@ -33,9 +33,13 @@ public class NewsDataModel {
 		del_cache_over_time();
 	}
 
+	public void finalize() {
+		db = null;
+	}
+
 	public ArrayList<HashMap<String, String>> newslist_today()
 			throws JSONException, Exception {
-		String token = system_argu("token",null);
+		String token = system_argu("token", null);
 		String url = "get=today&token=" + token;
 		return get_list(url);
 	}
@@ -52,8 +56,8 @@ public class NewsDataModel {
 		return get_list(url);
 	}
 
-	public ArrayList<HashMap<String, String>> cnt_day()
-			throws JSONException, Exception {
+	public ArrayList<HashMap<String, String>> cnt_day() throws JSONException,
+			Exception {
 
 		String url = "get=cnt&group=date";
 		JSONObject jsonObj = fetch_srv_files(url);
@@ -77,8 +81,8 @@ public class NewsDataModel {
 		return list;
 	}
 
-	public ArrayList<HashMap<String, String>> cnt_cate()
-			throws JSONException, Exception {
+	public ArrayList<HashMap<String, String>> cnt_cate() throws JSONException,
+			Exception {
 
 		String url = "get=cnt&group=rid";
 		JSONObject jsonObj = fetch_srv_files(url);
@@ -118,25 +122,23 @@ public class NewsDataModel {
 
 	public String system_argu(String index, String value) {
 
-		try{
+		try {
 			if (value == null) {
 				return db.systemGetByIndex(index).get("value");
 			}
-	
+
 			else {
-				try{
+				try {
 					db.systemPut(index, value);
-				}
-				catch(SQLException e){
+				} catch (SQLException e) {
 					db.systemSet(index, value);
 				}
 				return null;
 			}
-		}
-		catch(Exception e)
-		{
-        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
-            Log.e(ACTIVITY_TAG + ":system_argu", e.toString());
+		} catch (Exception e) {
+			int lineNum = Thread.currentThread().getStackTrace()[2]
+					.getLineNumber();
+			Log.e(ACTIVITY_TAG + ":system_argu", e.toString());
 		}
 		return null;
 	}
@@ -148,29 +150,25 @@ public class NewsDataModel {
 
 			if (nid == 0)
 				throw new Exception("Nid Can't be zero.");
-			
-			try
-			{
+
+			try {
 				map = db.newsGetById(nid);
-			}
-			catch(Exception e)
-			{
-				if(e.getMessage().equals("sqlNoData")){
+			} catch (Exception e) {
+				if (e.getMessage().equals("sqlNoData")) {
 					map = cache_news("" + nid);
 					db.newsPut(map);
-				}
-				else throw e;
+				} else
+					throw e;
 			}
-			
-			if(map == null)
+
+			if (map == null)
 				throw new Exception("nid " + id + " error in get_news()");
-			
+
 		} catch (Exception e) {
-        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
-            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
+			int lineNum = Thread.currentThread().getStackTrace()[2]
+					.getLineNumber();
+			Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
 		}
-    	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
-        Log.e("taichunmin get_news", lineNum + ": " + map.toString());
 		return map;
 	}
 
@@ -219,8 +217,9 @@ public class NewsDataModel {
 			map.put("url", obj.getString("url"));
 
 		} catch (Exception e) {
-        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
-            Log.e(ACTIVITY_TAG + ":cache_news", lineNum + ": " + e.toString());
+			int lineNum = Thread.currentThread().getStackTrace()[2]
+					.getLineNumber();
+			Log.e(ACTIVITY_TAG + ":cache_news", lineNum + ": " + e.toString());
 		}
 		return map;
 	}
@@ -228,9 +227,8 @@ public class NewsDataModel {
 	private void del_cache_over_time() {
 		int days = 3;
 		try {
-			days = Integer.parseInt(system_argu("cache_exist_time",null));
+			days = Integer.parseInt(system_argu("cache_exist_time", null));
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		ArrayList<String> id_arr = db.getOverTimeNewsId(days);
@@ -241,7 +239,7 @@ public class NewsDataModel {
 
 	}
 
-	private JSONObject fetch_srv_files(String api_url) throws Exception{
+	private JSONObject fetch_srv_files(String api_url) throws Exception {
 
 		JSONObject jsonObject = null;
 		try {
@@ -253,16 +251,18 @@ public class NewsDataModel {
 			jsonObject = new JSONObject(jsonHtml);
 
 			if (jsonObject.has("error"))
-				throw new Exception("Server Error: " + jsonObject.getJSONArray("error").join("; "));
+				throw new Exception("Server Error: "
+						+ jsonObject.getJSONArray("error").join("; "));
 
 		} catch (Exception e) {
-			if(e.getMessage().indexOf("Token invaild.")>=0)
-			{
+			if (e.getMessage().indexOf("Token invaild.") >= 0) {
 				// Token 失效
-				Toast.makeText(callerContext, "請登入以繼續...",	Toast.LENGTH_SHORT).show();
-				callerContext.startActivity(new Intent().setClass(callerContext,LoginActivity.class));
-			}
-			else throw e;
+				Toast.makeText(callerContext, "請登入以繼續...", Toast.LENGTH_SHORT)
+						.show();
+				callerContext.startActivity(new Intent().setClass(
+						callerContext, LoginActivity.class));
+			} else
+				throw e;
 		}
 		return jsonObject;
 	}
@@ -291,16 +291,37 @@ public class NewsDataModel {
 			// any cleanup code...
 		}
 	}
-	public boolean isLogin(boolean checkSvr) throws Exception
-	{
-		if( system_argu("token",null).equals("") )
+
+	public boolean isLogin(boolean checkSvr) throws Exception {
+		if (system_argu("token", null).equals(""))
 			return false;
-		if(checkSvr)
-		{
-			JSONObject jsonObject = fetch_srv_files("token=" + system_argu("token",null));
-			if( jsonObject.getJSONArray("error").getString(0).equals("Token invaild."))
+		if (checkSvr) {
+			JSONObject jsonObject = fetch_srv_files("token="
+					+ system_argu("token", null));
+			if (jsonObject.getJSONArray("error").getString(0)
+					.equals("Token invaild."))
 				return false;
 		}
 		return true;
+	}
+
+	public HashMap<String, String> fetch_rss_name() {
+		HashMap<String, String> map = new HashMap<String, String>();
+		try {
+			JSONObject jsonObj = fetch_srv_files("get=rss");
+			int cnt = Integer.parseInt(jsonObj.getString("rssCnt"));
+			JSONArray jsonArray = jsonObj.getJSONArray("rss");
+			for(int i=0;i<cnt;i++)
+			{
+				JSONObject jsonObj2 = jsonArray.getJSONObject(i);
+				map.put(jsonObj2.getString("rid"), jsonObj2.getString("name").replace("UDN", ""));
+			}
+		} catch (Exception e) {
+			int lineNum = Thread.currentThread().getStackTrace()[2]
+					.getLineNumber();
+			Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
+		}
+		Log.e(ACTIVITY_TAG, map.toString());
+		return map;
 	}
 }

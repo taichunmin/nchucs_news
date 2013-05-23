@@ -19,7 +19,6 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 
 	private static final String ACTIVITY_TAG = "Main";
-	Button btn_view_news, btn_login, btn_filter;
 	LinearLayout ll_mainBtnGroup;
 	RelativeLayout rl_btnToday, rl_btnAbout, rl_btnDateFliter,
 			rl_btnCategoryFilter, rl_btnSetting, rl_btnLogout;
@@ -63,9 +62,6 @@ public class MainActivity extends Activity {
 	}
 
 	private void findViews() {
-		btn_view_news = (Button) findViewById(R.id.btn_view_news);
-		btn_login = (Button) findViewById(R.id.btn_login);
-		btn_filter = (Button) findViewById(R.id.btn_filter);
 		ll_mainBtnGroup = (LinearLayout) findViewById(R.id.ll_mainBtnGroup);
 		rl_btnToday = (RelativeLayout) findViewById(R.id.rl_btnToday);
 		rl_btnAbout = (RelativeLayout) findViewById(R.id.rl_btnAbout);
@@ -91,9 +87,6 @@ public class MainActivity extends Activity {
 	}
 
 	private void setListeners() {
-		btn_view_news.setOnClickListener(listen_view_news);
-		btn_login.setOnClickListener(listen_login);
-		btn_filter.setOnClickListener(listen_filter);
 		rl_btnToday.setOnClickListener(listen_btnToday);
 		rl_btnAbout.setOnClickListener(listen_btnAbout);
 		rl_btnDateFliter.setOnClickListener(listen_btnDateFliter);
@@ -103,8 +96,8 @@ public class MainActivity extends Activity {
 	}
 
 	private void gotoLogin() {
-		startActivity(new Intent().setClass(MainActivity.this,
-				LoginActivity.class));
+		startActivity(new Intent().setClass(MainActivity.this, LoginActivity.class));
+		finish();
 	}
 
 	private void setAllBtnSquare(LinearLayout layout) {
@@ -123,29 +116,6 @@ public class MainActivity extends Activity {
 			}
 		}
 	}
-
-	private Button.OnClickListener listen_view_news = new Button.OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			startActivity(new Intent().setClass(MainActivity.this,
-					ViewNews.class));
-		}
-	};
-
-	private Button.OnClickListener listen_login = new Button.OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			gotoLogin();
-		}
-	};
-
-	private Button.OnClickListener listen_filter = new Button.OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			startActivity(new Intent().setClass(MainActivity.this,
-					FilterActivity.class));
-		}
-	};
 
 	private View.OnClickListener listen_btnToday = new View.OnClickListener() {
 		@Override
@@ -187,8 +157,7 @@ public class MainActivity extends Activity {
 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							startActivity(new Intent().setClass(
-									MainActivity.this, LoginActivity.class));
+							gotoLogin();
 						}
 					});
 			builder.setCancelable(true);

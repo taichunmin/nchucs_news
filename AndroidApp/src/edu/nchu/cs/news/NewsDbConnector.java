@@ -28,12 +28,17 @@ public class NewsDbConnector {
 
 	public NewsDbConnector(Context context) {
 		newsDbHp = new NewsDbHelper(context, DB_NAME, null, _DBVersion);
-		mNewsDbRW = newsDbHp.getWritableDatabase();
 		initial();
 	}
-
-	protected void finalize() { // Destructor function
-		mNewsDbRW.close(); // close the database connection
+	
+	private void dbOpen()
+	{
+		mNewsDbRW = newsDbHp.getWritableDatabase();
+	}
+	
+	private void dbClose()
+	{
+		mNewsDbRW.close();
 	}
 
 	private void initial() {
@@ -42,24 +47,30 @@ public class NewsDbConnector {
 		String[] sysName = { "token", "limit_per_page", "cache_exist_time",
 				"simi_1st", "simi_2st", "simi_3st", "onto_limit" }, sysValue = {
 				"", "200", "3", "60", "30", "10", "100" };
+		dbOpen();
 		for (int i = 0; i < sysName.length && i < sysValue.length; i++)
 			mNewsDbRW.execSQL(sql + "('" + sysName[i] + "','" + sysValue[i]
 					+ "');");
+		dbClose();
 	}
 
 	public void systemPut(String index, String value) throws SQLException {
 
+		dbOpen();
 		mNewsDbRW.execSQL("insert into `" + DB_SYS_TABLE
 				+ "` (`index`,`value`) values (?,?)", new String[] { index,
 				value });
+		dbClose();
 
 	}
 
 	public void systemSet(String index, String value) throws SQLException {
 
+		dbOpen();
 		mNewsDbRW.execSQL("update `" + DB_SYS_TABLE
 				+ "` set `value`=? where `index`=? ", new String[] { value,
 				index });
+		dbClose();
 	}
 
 	public void newsPut(HashMap<String, String> map) throws SQLException,
@@ -71,6 +82,7 @@ public class NewsDbConnector {
 			if (!map.containsKey(array_keys[i]))
 				throw new Exception("keyInvaild");
 
+		dbOpen();
 		mNewsDbRW
 				.execSQL(
 						"insert into `"
@@ -79,6 +91,7 @@ public class NewsDbConnector {
 						new String[] { map.get("_id"), map.get("title"),
 								map.get("content"), map.get("date"),
 								map.get("url") });
+		dbClose();
 
 	}
 
@@ -93,8 +106,10 @@ public class NewsDbConnector {
 			newRow.put("date", date);
 			newRow.put("url", url);
 
+			dbOpen();
 			mNewsDbRW.update(DB_NEWS_TABLE, newRow, "`_id`=?",
 					new String[] { _id });
+			dbClose();
 		} catch (Exception e) {
 			int lineNum = Thread.currentThread().getStackTrace()[2]
 					.getLineNumber();
@@ -103,17 +118,22 @@ public class NewsDbConnector {
 	}
 
 	public void systemDelByIndex(String index) {
+		dbOpen();
 		mNewsDbRW.delete(DB_SYS_TABLE, "`index`=?", new String[] { index });
+		dbClose();
 	}
 
 	public void newsDelById(String _id) {
+		dbOpen();
 		mNewsDbRW.delete(DB_NEWS_TABLE, "`_id`=?", new String[] { _id });
+		dbClose();
 	}
 
 	public HashMap<String, String> systemGetByIndex(String index)
 			throws Exception {
 
 		HashMap<String, String> map = new HashMap<String, String>();
+		dbOpen();
 		Cursor cursor = mNewsDbRW.rawQuery("select `index`, `value` from "
 				+ DB_SYS_TABLE + " where `index`=?", new String[] { index });
 		if (cursor == null)
@@ -124,6 +144,7 @@ public class NewsDbConnector {
 		map.put("index", cursor.getString(0));
 		map.put("value", cursor.getString(1));
 		cursor.close();
+		dbClose();
 		return map;
 	}
 
@@ -131,23 +152,32 @@ public class NewsDbConnector {
 
 		String _id = "" + nid;
 		HashMap<String, String> map = new HashMap<String, String>();
-		Cursor cursor = mNewsDbRW.rawQuery(
-				"select `_id`, `title`, `content`, `url`, `date`, `cache_time` from "
-						+ DB_NEWS_TABLE + " where `_id`=?",
-				new String[] { _id });
-		// Need to be fix (handle no nid)
-		if (cursor == null)
-			throw new Exception("sqlError");
-		if (cursor.getCount() == 0)
-			throw new Exception("sqlNoData");
-		cursor.moveToFirst();
-		map.put("_id", cursor.getInt(0) + "");
-		map.put("title", cursor.getString(1));
-		map.put("content", cursor.getString(2));
-		map.put("url", cursor.getString(3));
-		map.put("date", cursor.getString(4));
-		map.put("cache_time", cursor.getString(5));
-		cursor.close();
+		Cursor cursor = null ;
+		try{
+			dbOpen();
+			cursor = mNewsDbRW.rawQuery(
+					"select `_id`, `title`, `content`, `url`, `date`, `cache_time` from "
+							+ DB_NEWS_TABLE + " where `_id`=?",
+					new String[] { _id });
+			// Need to be fix (handle no nid)
+			if (cursor == null)
+				throw new Exception("sqlError");
+			if (cursor.getCount() == 0)
+				throw new Exception("sqlNoData");
+			cursor.moveToFirst();
+			map.put("_id", cursor.getInt(0) + "");
+			map.put("title", cursor.getString(1));
+			map.put("content", cursor.getString(2));
+			map.put("url", cursor.getString(3));
+			map.put("date", cursor.getString(4));
+			map.put("cache_time", cursor.getString(5));
+			cursor.close();
+			dbClose();
+		}catch(Exception e)
+		{
+			cursor.close();
+			throw e;
+		}
 		return map;
 	}
 
@@ -158,6 +188,7 @@ public class NewsDbConnector {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String date = dateFormat.format(now.getTime());
 		ArrayList<String> list = new ArrayList<String>();
+		dbOpen();
 		Cursor cursor = mNewsDbRW.rawQuery("select `_id` from " + DB_NEWS_TABLE
 				+ " where `cache_time`<=?", new String[] { date });
 		if (cursor.moveToFirst()) {
@@ -166,6 +197,7 @@ public class NewsDbConnector {
 			} while (cursor.moveToNext());
 		}
 		cursor.close();
+		dbClose();
 		return list;
 	}
 

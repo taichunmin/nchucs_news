@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50sp"
+    android:background="@drawable/bar_white"
+    android:clickable="true" >
+
+    <ImageView
+        android:layout_toLeftOf="@+id/filterImageView1"
+        android:layout_width="30sp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="5sp"
+        android:src="@drawable/play_icon" />
+
+    <TextView
+        android:id="@+id/tv_filterCnt"
+        style="@style/fontsize_xsmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="40sp"
+        android:background="@drawable/bubble_white"
+        android:padding="5sp"
+        android:text="123"
+        android:textColor="#111" />
+
+    <TextView
+        android:id="@+id/tv_filterText"
+        style="@style/fontsize_normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:text=""
+        android:textColor="#111" />
+
+</RelativeLayout>
