@@ -16,7 +16,10 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.view.Menu;
@@ -69,39 +72,60 @@ public class ViewNews extends Activity {
 		etNid.setOnEditorActionListener(etNidOnEnter);
 	}
 	
+	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	private void showNewsFromIntent()
 	{
+		// 解除網路鎖定
+		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+	    .detectDiskReads()
+	    .detectDiskWrites()
+	    .detectNetwork()   // or .detectAll() for all detectable problems
+	    .penaltyLog()
+	    .build());
+	    
+	    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+	    .detectLeakedSqlLiteObjects()
+	    .penaltyLog()
+	    .penaltyDeath()
+	    .build());
 		try{
 			Bundle bundle = this.getIntent().getExtras();
+			if(bundle == null) return;
 			showNews(bundle.getString("NID"));
 			ll_nidEnter.setVisibility(View.GONE); 
 		}
 		catch(Exception e)
 		{
-			Log.e(ACTIVITY_TAG,e.toString());
+        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
 		}
 	}
 	
 	private void showNews(String nid)
 	{
+		HashMap<String,String> news;
+		String sa = null;
 		try{
+			Log.d("taichunmin",nid);
 			// 檢查 NID 的正確性
-			if(nid.length()==0 || nid.equals("0")) throw new Exception("Nid Can't be zero.");
+			if(nid==null || nid.length()==0 || nid.equals("0")) throw new Exception("Nid Can't be zero.");
 			
-			HashMap<String,String> news = newsDataModel.get_news(nid);
+			news = newsDataModel.get_news(nid);
 			
 			// 設定顯示
-			tvViewNewsTitle.setText(news.get("title"));
-			tvViewNewsDatetime.setText(news.get("news_t"));
+			tvViewNewsTitle.setText((String)news.get("title"));
+			tvViewNewsDatetime.setText((String)news.get("date"));
+			Log.d("taichunmin","debug");
 			// 增加換行
-			tvViewNewsContent.setText("\n　　"+news.get("article").replace("\n", "\n\n　　"));
-			
+			sa = news.get("content");
+			tvViewNewsContent.setText("\n　　"+sa.replace("\n", "\n\n　　"));
 			// 隱藏軟體鍵盤
 			inputManager.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 		}
 		catch( Exception e )
 		{
-			Log.e(ACTIVITY_TAG,e.toString());
+        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
 		}
 	}
 
@@ -122,7 +146,8 @@ public class ViewNews extends Activity {
 			}
 			catch( Exception e )
 			{
-				Log.e(ACTIVITY_TAG,e.toString());
+	        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+	            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
 			}
 		}
 	};

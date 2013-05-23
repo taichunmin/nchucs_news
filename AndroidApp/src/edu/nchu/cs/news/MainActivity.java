@@ -34,18 +34,24 @@ public class MainActivity extends Activity {
 		findViews();
 		setAllBtnSquare(ll_mainBtnGroup);
 		setListeners();
-		if (newsDataModel.isLogin(false)) {
-			// if login
-			Toast.makeText(getApplicationContext(), "使用返回鍵回到主選單",
-					Toast.LENGTH_SHORT).show();
-			// 切換至今日推薦
-			startActivity(new Intent().setClass(MainActivity.this,
-					NewsList.class));
-		} else {
-			// if no login
-			Toast.makeText(getApplicationContext(), "請登入以繼續...",
-					Toast.LENGTH_SHORT).show();
-			gotoLogin();
+		try {
+			if (newsDataModel.isLogin(false)) {
+				// if login
+				Toast.makeText(getApplicationContext(), "使用返回鍵回到主選單",
+						Toast.LENGTH_SHORT).show();
+				// 切換至今日推薦
+				startActivity(new Intent().setClass(MainActivity.this,
+						NewsList.class));
+			} else {
+				// if no login
+				Toast.makeText(getApplicationContext(), "請登入以繼續...",
+						Toast.LENGTH_SHORT).show();
+				gotoLogin();
+			}
+		} catch (Exception e) {
+			int lineNum = Thread.currentThread().getStackTrace()[2]
+					.getLineNumber();
+			Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
 		}
 	}
 
@@ -89,7 +95,7 @@ public class MainActivity extends Activity {
 		btn_login.setOnClickListener(listen_login);
 		btn_filter.setOnClickListener(listen_filter);
 		rl_btnToday.setOnClickListener(listen_btnToday);
-		// rl_btnAbout.setOnClickListener(listen_btnAbout);
+		rl_btnAbout.setOnClickListener(listen_btnAbout);
 		rl_btnDateFliter.setOnClickListener(listen_btnDateFliter);
 		rl_btnCategoryFilter.setOnClickListener(listen_btnCategoryFilter);
 		// rl_btnSetting.setOnClickListener(listen_btnSetting);
@@ -187,11 +193,19 @@ public class MainActivity extends Activity {
 					});
 			builder.setCancelable(true);
 			builder.setNegativeButton(android.R.string.no, null);
-			
+
 			builder.setMessage(R.string.confirmLogoutMessage);
-			
+
 			AlertDialog confirmDialog = builder.create();
 			confirmDialog.show();
+		}
+	};
+
+	private View.OnClickListener listen_btnAbout = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			startActivity(new Intent().setClass(MainActivity.this,
+					AboutActivity.class));
 		}
 	};
 

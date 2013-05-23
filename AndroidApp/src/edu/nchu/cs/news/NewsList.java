@@ -23,7 +23,6 @@ public class NewsList extends Activity {
 
 	private static final String ACTIVITY_TAG = "NewsList";
 	private ProgressBar circleProgressBar;
-	private RelativeLayout rl_newsListItem1;
 	private LayoutInflater inflater;
 	private LinearLayout ll_newsListContent;
 	private TextView tv_newsListTitle;
@@ -51,12 +50,10 @@ public class NewsList extends Activity {
 				ListTypeStr = "today";
 			if (ListTypeStr.equals("date")) {
 				ListType = 1;
-				// tv_newsListTitle.setText( getText(R.string.list_type_today)
-				// );
+				tv_newsListTitle.setText(bundle.getString("DATA"));
 			} else if (ListTypeStr.equals("category")) {
 				ListType = 2;
-				// tv_newsListTitle.setText( getText(R.string.list_type_today)
-				// );
+				tv_newsListTitle.setText(bundle.getString("DATA"));
 			} else
 				throw new Exception("");
 		} catch (Exception e) {
@@ -65,12 +62,12 @@ public class NewsList extends Activity {
 			tv_newsListTitle.setText(getText(R.string.list_type_today));
 			ListType = 0;
 		}
+		Log.d("taichunmin","debug");
+		addNewsListGUI();
 	}
 
 	private void findViews() {
-		rl_newsListItem1 = (RelativeLayout) findViewById(R.id.rl_newsListItem1);
 		tv_newsListTitle = (TextView) findViewById(R.id.tv_newsListTitle);
-		rl_newsListItem1.setTag(123);
 		ll_newsListContent = (LinearLayout) findViewById(R.id.ll_newsListContent);
 		inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		circleProgressBar = (ProgressBar) findViewById(R.id.circleProgressBar);
@@ -78,7 +75,6 @@ public class NewsList extends Activity {
 	}
 
 	private void setListeners() {
-		rl_newsListItem1.setOnClickListener(clickViewNews);
 	}
 
 	@Override
@@ -109,12 +105,13 @@ public class NewsList extends Activity {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case handle_addNewsList:
+				addNewsListGUIHandle();
 				break;
 			}
 		}
 	};
 
-	private void addNewsListGUI(int nid) {
+	private void addNewsListGUI() {
 
 		showProgressBar();
 
@@ -149,22 +146,26 @@ public class NewsList extends Activity {
 		if (newsItems == null) {
 			Log.e(ACTIVITY_TAG, "addNewsListGUIHandle null error.");
 		}
-		for (int i = 0; i < newsItems.size(); i++) {
-			HashMap<String, String> item = (HashMap<String, String>) newsItems
-					.get(i);
-			View ListItemView = inflater.inflate(R.layout.new_news_list_view,
-					null);
+		try {
+			for (int i = 0; i < newsItems.size(); i++) {
+				HashMap<String, String> item = (HashMap<String, String>) newsItems
+						.get(i);
+				View ListItemView = inflater.inflate(
+						R.layout.new_news_list_view, ll_newsListContent, false);
 
-			TextView tv_newsItemDate = (TextView) ListItemView
-					.findViewById(R.id.tv_newsItemDate), tv_newsItemTitle = (TextView) ListItemView
-					.findViewById(R.id.tv_newsItemTitle);
+				TextView tv_newsItemDate = (TextView) ListItemView
+						.findViewById(R.id.tv_newsItemDate), tv_newsItemTitle = (TextView) ListItemView
+						.findViewById(R.id.tv_newsItemTitle);
 
-			ListItemView.setOnClickListener(clickViewNews);
-			ListItemView.setTag(item.get("nid"));
-			tv_newsItemTitle.setText(item.get("title"));
-			tv_newsItemDate.setText(item.get("date"));
+				ListItemView.setOnClickListener(clickViewNews);
+				ListItemView.setTag(item.get("nid"));
+				tv_newsItemTitle.setText(item.get("title"));
+				tv_newsItemDate.setText(item.get("date"));
 
-			ll_newsListContent.addView(ListItemView);
+				ll_newsListContent.addView(ListItemView);
+			}
+		} catch (Exception e) {
+			Log.e(ACTIVITY_TAG,e.getMessage());
 		}
 		newsItems = null;
 		hideProgressBar();

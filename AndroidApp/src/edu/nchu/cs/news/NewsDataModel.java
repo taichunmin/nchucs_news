@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.SQLException;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -34,7 +35,7 @@ public class NewsDataModel {
 
 	public ArrayList<HashMap<String, String>> newslist_today()
 			throws JSONException, Exception {
-		String token = db.systemGetByIndex("token");
+		String token = system_argu("token",null);
 		String url = "get=today&token=" + token;
 		return get_list(url);
 	}
@@ -51,18 +52,18 @@ public class NewsDataModel {
 		return get_list(url);
 	}
 
-	public ArrayList<HashMap<String, String>> cnt_day(String date)
+	public ArrayList<HashMap<String, String>> cnt_day()
 			throws JSONException, Exception {
 
-		String url = "get=cnt&group=date" + date;
+		String url = "get=cnt&group=date";
 		JSONObject jsonObj = fetch_srv_files(url);
+		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
 
 		if (jsonObj.getString("cntCnt").equals("0"))
-			throw new Exception("No match news.");
+			return list;
 
-		JSONArray jsonArray = jsonObj.getJSONArray("list");
+		JSONArray jsonArray = jsonObj.getJSONArray("cnt");
 		int cnt = Integer.parseInt(jsonObj.getString("cntCnt"));
-		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
 
 		for (int i = 0; i < cnt; i++) {
 			JSONObject obj = jsonArray.getJSONObject(i);
@@ -76,18 +77,18 @@ public class NewsDataModel {
 		return list;
 	}
 
-	public ArrayList<HashMap<String, String>> cnt_cate(int rid)
+	public ArrayList<HashMap<String, String>> cnt_cate()
 			throws JSONException, Exception {
 
-		String url = "get=cnt&group=rid" + rid;
+		String url = "get=cnt&group=rid";
 		JSONObject jsonObj = fetch_srv_files(url);
+		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
 
 		if (jsonObj.getString("cntCnt").equals("0"))
-			throw new Exception("No match news.");
+			return list;
 
-		JSONArray jsonArray = jsonObj.getJSONArray("list");
+		JSONArray jsonArray = jsonObj.getJSONArray("cnt");
 		int cnt = Integer.parseInt(jsonObj.getString("cntCnt"));
-		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
 
 		for (int i = 0; i < cnt; i++) {
 			JSONObject obj = jsonArray.getJSONObject(i);
@@ -117,20 +118,27 @@ public class NewsDataModel {
 
 	public String system_argu(String index, String value) {
 
-		if (value == null) {
-			HashMap<String, String> map = new HashMap<String, String>();
-			return db.systemGetByIndex(index);
-		}
-
-		else {
-			if (db.systemGetByIndex(index) == null) {
-				db.systemPut(index, value);
-			} else {
-				db.systemSet(index, value);
+		try{
+			if (value == null) {
+				return db.systemGetByIndex(index).get("value");
 			}
-			return null;
+	
+			else {
+				try{
+					db.systemPut(index, value);
+				}
+				catch(SQLException e){
+					db.systemSet(index, value);
+				}
+				return null;
+			}
 		}
-
+		catch(Exception e)
+		{
+        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+            Log.e(ACTIVITY_TAG + ":system_argu", e.toString());
+		}
+		return null;
 	}
 
 	public HashMap<String, String> get_news(String id) {
@@ -140,17 +148,29 @@ public class NewsDataModel {
 
 			if (nid == 0)
 				throw new Exception("Nid Can't be zero.");
-
-			if (db.newsGetById(nid) != null) {
+			
+			try
+			{
 				map = db.newsGetById(nid);
-			} else {
-				map = cache_news("" + nid);
-				db.newsPut(map);
 			}
+			catch(Exception e)
+			{
+				if(e.getMessage().equals("sqlNoData")){
+					map = cache_news("" + nid);
+					db.newsPut(map);
+				}
+				else throw e;
+			}
+			
+			if(map == null)
+				throw new Exception("nid " + id + " error in get_news()");
+			
 		} catch (Exception e) {
         	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
             Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
 		}
+    	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+        Log.e("taichunmin get_news", lineNum + ": " + map.toString());
 		return map;
 	}
 
@@ -158,13 +178,13 @@ public class NewsDataModel {
 			throws JSONException, Exception {
 
 		JSONObject jsonObj = fetch_srv_files(url);
+		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
 
-		if ((jsonObj).getString("listCnt").equals("0"))
-			throw new Exception("No match news.");
+		if (jsonObj.getString("listCnt").equals("0"))
+			return list;
 
 		JSONArray jsonArray = jsonObj.getJSONArray("list");
 		int cnt = Integer.parseInt(jsonObj.getString("listCnt"));
-		ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
 
 		for (int i = 0; i < cnt; i++) {
 			JSONObject obj = jsonArray.getJSONObject(i);
@@ -192,21 +212,27 @@ public class NewsDataModel {
 			JSONArray jsonArray = jsonObj.getJSONArray("news");
 			JSONObject obj = jsonArray.getJSONObject(0);
 
-			map.put("nid", obj.getString("nid"));
+			map.put("_id", obj.getString("nid"));
 			map.put("title", obj.getString("title"));
-			map.put("article", obj.getString("article"));
-			map.put("news_t", obj.getString("news_t"));
+			map.put("content", obj.getString("article"));
+			map.put("date", obj.getString("news_t"));
 			map.put("url", obj.getString("url"));
 
 		} catch (Exception e) {
         	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
-            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
+            Log.e(ACTIVITY_TAG + ":cache_news", lineNum + ": " + e.toString());
 		}
 		return map;
 	}
 
 	private void del_cache_over_time() {
-		int days = Integer.parseInt(db.systemGetByIndex("cache_exist_time"));
+		int days = 3;
+		try {
+			days = Integer.parseInt(system_argu("cache_exist_time",null));
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		ArrayList<String> id_arr = db.getOverTimeNewsId(days);
 
 		for (int i = 0; i < id_arr.size(); i++) {
@@ -215,10 +241,9 @@ public class NewsDataModel {
 
 	}
 
-	private JSONObject fetch_srv_files(String api_url) {
+	private JSONObject fetch_srv_files(String api_url) throws Exception{
 
 		JSONObject jsonObject = null;
-		Log.d("debug","url="+base_url + api_url);
 		try {
 			String jsonHtml = getUriContent(base_url + api_url);
 
@@ -231,14 +256,13 @@ public class NewsDataModel {
 				throw new Exception("Server Error: " + jsonObject.getJSONArray("error").join("; "));
 
 		} catch (Exception e) {
-        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
-            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
 			if(e.getMessage().indexOf("Token invaild.")>=0)
 			{
 				// Token 失效
 				Toast.makeText(callerContext, "請登入以繼續...",	Toast.LENGTH_SHORT).show();
 				callerContext.startActivity(new Intent().setClass(callerContext,LoginActivity.class));
 			}
+			else throw e;
 		}
 		return jsonObject;
 	}
@@ -267,24 +291,15 @@ public class NewsDataModel {
 			// any cleanup code...
 		}
 	}
-	public boolean isLogin(boolean checkSvr)
+	public boolean isLogin(boolean checkSvr) throws Exception
 	{
 		if( system_argu("token",null).equals("") )
 			return false;
-		Log.d("debug","debug");
 		if(checkSvr)
 		{
-			try{
 			JSONObject jsonObject = fetch_srv_files("token=" + system_argu("token",null));
 			if( jsonObject.getJSONArray("error").getString(0).equals("Token invaild."))
 				return false;
-			}
-			catch(Exception e)
-			{
-	        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
-	            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
-				return false;
-			}
 		}
 		return true;
 	}

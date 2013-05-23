@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rl_newsListItem1"
     android:layout_width="match_parent"
     android:layout_height="50sp"
     android:background="@drawable/bar_white"
@@ -13,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="營收2位數年成長 華碩有信心"
+        android:text=""
         android:textColor="#111" />
 
     <TextView
@@ -25,7 +24,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="3sp"
         android:layout_marginLeft="3sp"
-        android:text="2013-05-06 21:44:27"
+        android:text=""
         android:textColor="#111" />
 
     <ImageView
