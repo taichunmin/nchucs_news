@@ -36,7 +36,7 @@ try{
 	// 紀錄使用者的閱讀紀錄
 	if( $token->uid && !empty($req['readnid']) && preg_match('/^\d+(,\d+)*$/',$req['readnid']) ) // 儲存已讀新聞
 	{
-		foreach( implode(',',$req['readnid']) as $readnid )
+		foreach( explode(',',$req['readnid']) as $readnid )
 		{
 			// 新增閱讀紀錄
 			$sql = "select `vid` from `viewlog` where `uid`='{$token->uid}' and `nid`='$readnid' ";

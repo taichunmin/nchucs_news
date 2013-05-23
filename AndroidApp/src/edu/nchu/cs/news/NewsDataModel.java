@@ -1,15 +1,23 @@
 package edu.nchu.cs.news;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +25,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 import android.database.SQLException;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -311,10 +320,10 @@ public class NewsDataModel {
 			JSONObject jsonObj = fetch_srv_files("get=rss");
 			int cnt = Integer.parseInt(jsonObj.getString("rssCnt"));
 			JSONArray jsonArray = jsonObj.getJSONArray("rss");
-			for(int i=0;i<cnt;i++)
-			{
+			for (int i = 0; i < cnt; i++) {
 				JSONObject jsonObj2 = jsonArray.getJSONObject(i);
-				map.put(jsonObj2.getString("rid"), jsonObj2.getString("name").replace("UDN", ""));
+				map.put(jsonObj2.getString("rid"), jsonObj2.getString("name")
+						.replace("UDN", ""));
 			}
 		} catch (Exception e) {
 			int lineNum = Thread.currentThread().getStackTrace()[2]
@@ -323,5 +332,27 @@ public class NewsDataModel {
 		}
 		Log.e(ACTIVITY_TAG, map.toString());
 		return map;
+	}
+
+	public class NewsReadTask extends AsyncTask<String, Void, Boolean> {
+		@Override
+		protected Boolean doInBackground(String... params) {
+			try {
+				if(params.length==0)return false;
+				String url = base_url + "token=" + system_argu("token",null) + "&readnid=" + params[0];
+				int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+				Log.e(ACTIVITY_TAG+".NewsReadTask", lineNum + ": " + url.toString());
+				String jsonHtml = getUriContent(url);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return true;
+		}
+
+		@Override
+		protected void onPostExecute(final Boolean success) {
+			// No thing
+		}
 	}
 }

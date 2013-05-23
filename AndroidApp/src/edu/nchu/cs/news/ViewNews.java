@@ -207,6 +207,7 @@ public class ViewNews extends Activity {
 		tvViewNewsDatetime.setText((String) news.get("date"));
 		tvViewNewsContent.setText((String) news.get("content"));
 		hideProgressBar();
+		newsDataModel.new NewsReadTask().execute(nid);
 	}
 
 	@SuppressLint("HandlerLeak")
