@@ -13,7 +13,7 @@
     <string name="list_type_today">今日推薦</string>
     <string name="filter_date">日期篩選</string>
     <string name="filter_rid">分類篩選</string>
-    <string name="logoutConfirm">分類篩選</string>
+    <string name="logoutConfirm">登出</string>
     <string name="confirmLogoutMessage">確定要登出嗎？</string>
     <string name="title_activity_about">關於</string>
     <string name="about0">關於：新聞推推樂</string>
