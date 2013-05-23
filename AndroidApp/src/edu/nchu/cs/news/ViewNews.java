@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.EditText;
 import android.util.Log;
 
+@SuppressWarnings("unused")
 public class ViewNews extends Activity {
 
 	private static final String ACTIVITY_TAG="ViewNews";

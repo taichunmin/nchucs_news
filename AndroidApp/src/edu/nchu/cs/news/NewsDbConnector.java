@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Map;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -79,7 +78,7 @@ public class NewsDbConnector {
 			newRow.put("`index`", index);
 	        newRow.put("`value`", value);
 	        
-	        dbOpen("r");
+	        dbOpen("w");
 	        mNewsDbRW.insertOrThrow(DB_SYS_TABLE, null, newRow);
 	        dbClose();
 
@@ -118,12 +117,13 @@ public class NewsDbConnector {
 			
 	        newRow.put("value", value);
 	        
-	        dbOpen("r");
+	        dbOpen("w");
 	        mNewsDbRW.update(DB_SYS_TABLE, newRow, " `index`=?", new String[] { index });
 	        dbClose();
 		}
         catch( Exception e ) {
-            Log.e(ACTIVITY_TAG,e.toString());
+        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
         }
 	}
 
@@ -189,7 +189,6 @@ public class NewsDbConnector {
 			}
 			cursor.close();
 			dbClose();
-
 			
 		}
         catch( Exception e ) {

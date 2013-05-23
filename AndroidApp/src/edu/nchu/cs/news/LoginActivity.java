@@ -227,8 +227,6 @@ public class LoginActivity extends Activity {
 			HttpPost post = new HttpPost(LOGIN_POST_PAGE);
 			StringBuilder sb = new StringBuilder();
 			try{
-				Log.e(ACTIVITY_TAG, "email="+params[0]);
-				Log.e(ACTIVITY_TAG, "pass="+params[1]);
 				// 網路驗證進程
 				List<NameValuePair> pairs = new ArrayList<NameValuePair>(1);
 				pairs.add(new BasicNameValuePair("email",params[0]));
@@ -247,7 +245,6 @@ public class LoginActivity extends Activity {
 				}
 				buf.close();
 				ips.close();
-				Log.d(ACTIVITY_TAG, "sb=" + sb.toString());
 	            
 	            JSONObject obj = new JSONObject(sb.toString());
 				newsDataModel.system_argu("token",obj.getString("token"));
@@ -274,14 +271,14 @@ public class LoginActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(final Boolean success) {
-			mAuthTask = null;
-			showProgress(false);
 
 			if (success) {
-				//finish();
 				startActivity(new Intent().setClass(LoginActivity.this,
 						MainActivity.class));
+				finish();
 			} else {
+				mAuthTask = null;
+				showProgress(false);
 				mPasswordView
 						.setError(getString(R.string.error_incorrect_password));
 				mPasswordView.requestFocus();

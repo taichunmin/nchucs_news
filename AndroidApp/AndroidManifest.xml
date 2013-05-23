@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="8" />
+        android:targetSdkVersion="17" />
 
     <uses-permission android:name="android.permission.INTERNET" >
     </uses-permission>
@@ -24,8 +24,7 @@
         </activity>
         <activity
             android:name="edu.nchu.cs.news.MainActivity"
-            android:label="@string/app_name"
-            android:noHistory="true" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

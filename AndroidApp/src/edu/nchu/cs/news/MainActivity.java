@@ -25,6 +25,7 @@ public class MainActivity extends Activity {
 			rl_btnCategoryFilter, rl_btnSetting, rl_btnLogout;
 	int btnSquareSize = 100;
 	int btnImageSize = 60;
+	private NewsDataModel newsDataModel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +34,7 @@ public class MainActivity extends Activity {
 		findViews();
 		setAllBtnSquare(ll_mainBtnGroup);
 		setListeners();
-
-		if (false) {
+		if (newsDataModel.isLogin(false)) {
 			// if login
 			Toast.makeText(getApplicationContext(), "使用返回鍵回到主選單",
 					Toast.LENGTH_SHORT).show();
@@ -81,6 +81,7 @@ public class MainActivity extends Activity {
 		btnImageSize = (int) Math.floor(btnSquareSize * 0.6);
 		Log.d(ACTIVITY_TAG, "width: " + width + ", height: " + height
 				+ ", btnSquareSize: " + btnSquareSize);
+		newsDataModel = new NewsDataModel(this);
 	}
 
 	private void setListeners() {

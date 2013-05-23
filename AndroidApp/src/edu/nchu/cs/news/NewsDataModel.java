@@ -15,14 +15,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 public class NewsDataModel {
 
 	private NewsDbConnector db;
+	Context callerContext;
 	private static final String ACTIVITY_TAG = "NewsDataModel";
+	private static final String base_url = "http://news.taichunmin.idv.tw/nchucs_news/ajax.php?";
 
 	public NewsDataModel(Context context) {
+		callerContext = context;
 		db = new NewsDbConnector(context);
 		del_cache_over_time();
 	}
@@ -110,12 +115,11 @@ public class NewsDataModel {
 
 	}
 
-	public HashMap<String, String> system_argu(String index, String value) {
+	public String system_argu(String index, String value) {
 
 		if (value == null) {
 			HashMap<String, String> map = new HashMap<String, String>();
-			map.put(index, db.systemGetByIndex(index));
-			return map;
+			return db.systemGetByIndex(index);
 		}
 
 		else {
@@ -144,7 +148,8 @@ public class NewsDataModel {
 				db.newsPut(map);
 			}
 		} catch (Exception e) {
-			Log.e(ACTIVITY_TAG, e.toString());
+        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
 		}
 		return map;
 	}
@@ -194,7 +199,8 @@ public class NewsDataModel {
 			map.put("url", obj.getString("url"));
 
 		} catch (Exception e) {
-			Log.e(ACTIVITY_TAG, e.toString());
+        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
 		}
 		return map;
 	}
@@ -212,19 +218,27 @@ public class NewsDataModel {
 	private JSONObject fetch_srv_files(String api_url) {
 
 		JSONObject jsonObject = null;
+		Log.d("debug","url="+base_url + api_url);
 		try {
-			String jsonHtml = getUriContent(api_url);
+			String jsonHtml = getUriContent(base_url + api_url);
 
 			if (jsonHtml.length() == 0)
 				throw new Exception("Server didn't send json data.");
 
 			jsonObject = new JSONObject(jsonHtml);
 
-			if (!jsonObject.isNull("error"))
-				throw new Exception("Server Error.");
+			if (jsonObject.has("error"))
+				throw new Exception("Server Error: " + jsonObject.getJSONArray("error").join("; "));
 
 		} catch (Exception e) {
-			Log.e(ACTIVITY_TAG, e.toString());
+        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
+			if(e.getMessage().indexOf("Token invaild.")>=0)
+			{
+				// Token 失效
+				Toast.makeText(callerContext, "請登入以繼續...",	Toast.LENGTH_SHORT).show();
+				callerContext.startActivity(new Intent().setClass(callerContext,LoginActivity.class));
+			}
 		}
 		return jsonObject;
 	}
@@ -253,5 +267,25 @@ public class NewsDataModel {
 			// any cleanup code...
 		}
 	}
-
+	public boolean isLogin(boolean checkSvr)
+	{
+		if( system_argu("token",null).equals("") )
+			return false;
+		Log.d("debug","debug");
+		if(checkSvr)
+		{
+			try{
+			JSONObject jsonObject = fetch_srv_files("token=" + system_argu("token",null));
+			if( jsonObject.getJSONArray("error").getString(0).equals("Token invaild."))
+				return false;
+			}
+			catch(Exception e)
+			{
+	        	int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
+	            Log.e(ACTIVITY_TAG, lineNum + ": " + e.toString());
+				return false;
+			}
+		}
+		return true;
+	}
 }

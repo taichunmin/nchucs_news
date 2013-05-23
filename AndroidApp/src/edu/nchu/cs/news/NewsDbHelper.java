@@ -9,7 +9,7 @@ public class NewsDbHelper extends SQLiteOpenHelper {
 
 	public static final String DB_SYS_TABLE = "system",
 			DB_NEWS_TABLE = "news_cache";
-	private final String DB_NAME = "nchucsnews", ACTIVITY_TAG = "NewsDbHelper";
+	private final String ACTIVITY_TAG = "NewsDbHelper";
 	private String[] sCreateTableSQL = {
 			"CREATE TABLE `" + DB_SYS_TABLE + "` ("
 					+ "`index` VARCHAR(128) NOT NULL ,"
