@@ -114,7 +114,7 @@ try{
 		else if(isset($req['rid']))
 			$sql = "select * from (select left(`news_t`,10) as 'date', count(*) as 'cnt' from `news` where `rid`='{$req['rid']}' group by `date`) as a order by a.date desc ";
 		else if($req['group']=='date')
-			$sql = "select left(`news_t`,10) as 'date',count(*) as 'cnt' from `news` group by left(`news_t`,10)";
+			$sql = "select * from (select left(`news_t`,10) as 'date',count(*) as 'cnt' from `news` group by left(`news_t`,10)) as a order by a.date desc ";
 		else $sql = "select `rid`,count(*) as 'cnt' from `news` group by `rid`";
 		
 		$res = mysql_query($sql);
