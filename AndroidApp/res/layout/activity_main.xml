@@ -218,34 +218,6 @@
                         android:textColor="#000" />
                 </RelativeLayout>
             </LinearLayout>
-
-            <TextView
-                style="@style/fontsize_normal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="0dp"
-                android:gravity="center_vertical|center_horizontal"
-                android:text=""
-                android:textColor="#000" />
-
-            <Button
-                android:id="@+id/btn_view_news"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="view_news" />
-
-            <Button
-                android:id="@+id/btn_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="login" />
-
-            <Button
-                android:id="@+id/btn_filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="filter" />
         </LinearLayout>
     </ScrollView>
 
