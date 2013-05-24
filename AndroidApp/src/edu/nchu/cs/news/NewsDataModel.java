@@ -341,7 +341,6 @@ public class NewsDataModel {
 				if(params.length==0)return false;
 				String url = base_url + "token=" + system_argu("token",null) + "&readnid=" + params[0];
 				int lineNum = Thread.currentThread().getStackTrace()[2].getLineNumber();
-				Log.e(ACTIVITY_TAG+".NewsReadTask", lineNum + ": " + url.toString());
 				String jsonHtml = getUriContent(url);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

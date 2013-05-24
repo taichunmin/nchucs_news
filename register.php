@@ -48,7 +48,7 @@
 			tai_mysqlExec($sql);
 			if(empty($_GET['app']))
 				tai_location('index.php');
-			else die('alert("感謝您的註冊，請按回到應用程式登入。")');
+			else die('<script>alert("感謝您的註冊，請按回到應用程式登入。");</script>');
 		}
 	}
 	include_once("header.php");
