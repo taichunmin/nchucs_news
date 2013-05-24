@@ -51,7 +51,7 @@ else $uid = $ses->uid;
 	</div>
 <?php
 	// 取得推薦統計
-	$sql = "select `uid`,count(`nid`) as 'cnt' from `ontology` group by `uid`";
+	$sql = "select `uid`,count(`nid`) as 'cnt' from `ontology` group by `uid` limit 50";
 	$analyRes = mysql_query($sql);
 ?>
 	<div data-role="collapsible" data-content-theme="d" data-theme="b">

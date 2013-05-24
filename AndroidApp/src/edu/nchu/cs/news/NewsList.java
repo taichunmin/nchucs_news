@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class NewsList extends Activity {
 
@@ -27,7 +28,7 @@ public class NewsList extends Activity {
 	private LinearLayout ll_newsListContent;
 	private TextView tv_newsListTitle;
 	private int ListType = 0; // 0=today, 1=date, 2=cateDay
-	protected static final int handle_addNewsList = 0x10001;
+	protected static final int handle_addNewsList = 0x10001,handle_closeList = 0x10002;
 	private ArrayList<HashMap<String, String>> newsItems = null;
 	private NewsDataModel newsDataModel;
 	private String filterData = null;
@@ -109,6 +110,11 @@ public class NewsList extends Activity {
 			case handle_addNewsList:
 				addNewsListGUIHandle();
 				break;
+			case handle_closeList:
+				Toast.makeText(getApplicationContext(), "系統沒有推薦新聞給您。",
+						Toast.LENGTH_SHORT).show();
+				finish();
+				break;
 			}
 		}
 	};
@@ -124,6 +130,8 @@ public class NewsList extends Activity {
 					switch (ListType) {
 					case 0: // today
 						newsItems = newsDataModel.newslist_today();
+						if(newsItems.size()==0)
+							throw new Exception("todayNoData");
 						break;
 					case 1: // day
 						newsItems = newsDataModel.newslist_day(filterData);
@@ -136,6 +144,12 @@ public class NewsList extends Activity {
 					msg.what = handle_addNewsList;
 					mHandler.sendMessage(msg);
 				} catch (Exception e) {
+					if(e.getMessage().equals("todayNoData"))
+					{
+						Message msg = new Message();
+						msg.what = handle_closeList;
+						mHandler.sendMessage(msg);
+					}
 					Log.e(ACTIVITY_TAG, e.getMessage());
 				}
 			}

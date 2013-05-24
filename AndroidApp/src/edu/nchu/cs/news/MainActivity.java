@@ -91,7 +91,7 @@ public class MainActivity extends Activity {
 		rl_btnAbout.setOnClickListener(listen_btnAbout);
 		rl_btnDateFliter.setOnClickListener(listen_btnDateFliter);
 		rl_btnCategoryFilter.setOnClickListener(listen_btnCategoryFilter);
-		// rl_btnSetting.setOnClickListener(listen_btnSetting);
+		rl_btnSetting.setOnClickListener(listen_btnSetting);
 		rl_btnLogout.setOnClickListener(listen_btnLogout);
 	}
 
@@ -175,6 +175,14 @@ public class MainActivity extends Activity {
 		public void onClick(View v) {
 			startActivity(new Intent().setClass(MainActivity.this,
 					AboutActivity.class));
+		}
+	};
+
+	private View.OnClickListener listen_btnSetting = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			startActivity(new Intent().setClass(MainActivity.this,
+					SettingsActivity.class));
 		}
 	};
 
