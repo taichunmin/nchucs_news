@@ -54,13 +54,6 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
 	private void findViews() {
 		ll_mainBtnGroup = (LinearLayout) findViewById(R.id.ll_mainBtnGroup);
 		rl_btnToday = (RelativeLayout) findViewById(R.id.rl_btnToday);

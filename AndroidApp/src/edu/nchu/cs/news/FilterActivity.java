@@ -42,13 +42,6 @@ public class FilterActivity extends Activity {
 		processIntent();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.filter, menu);
-		return true;
-	}
-
 	private void findViews() {
 		tv_filterTitle = (TextView) findViewById(R.id.tv_filterTitle);
 		ll_filterListContent = (LinearLayout) findViewById(R.id.ll_filterListContent);

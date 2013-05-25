@@ -81,13 +81,6 @@ public class NewsList extends Activity {
 	private void setListeners() {
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.news_list, menu);
-		return true;
-	}
-
 	private View.OnClickListener clickViewNews = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
