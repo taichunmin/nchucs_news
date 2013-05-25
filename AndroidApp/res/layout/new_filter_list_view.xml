@@ -6,7 +6,6 @@
     android:clickable="true" >
 
     <ImageView
-        android:layout_toLeftOf="@+id/filterImageView1"
         android:layout_width="30sp"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"

@@ -24,6 +24,7 @@
 				while( $nidRow = mysql_fetch_assoc($nidRes) )
 					$nid[] = $nidRow['nid'];
 				@mysql_free_result($nidRes);
+				if(count($nid)==0) continue;
 				$nidcomma = implode(',',$nid);
 				$sql = "select `wid`,sum(`cnt`) as 'sum' from `news2word` where `nid` in ($nidcomma) group by `wid` ";
 				$wordRes = mysql_query($sql);
@@ -147,16 +148,20 @@
 	tai_mysqlExec($sql);
 	$sql = "insert into `ontology` (`uid`,`nid`,`weight`) values ";
 	$tmp = array();
-	foreach( array_keys($result) as $uid )
+	for( $i=0; $i<count($result); $i+=10 )
 	{
-		$i = 0;
-		foreach( array_keys($result[$uid]) as $nid )
+		$sliceResult = array_slice($result, $i, 10, true);
+		foreach( array_keys($sliceResult) as $uid )
 		{
-			if($i++>=100) break;
-			$tmp[] = " ($uid,$nid,{$result[$uid][$nid]}) ";
+			$i = 0;
+			foreach( array_keys($sliceResult[$uid]) as $nid )
+			{
+				if($i++>=100) break;
+				$tmp[] = " ($uid,$nid,{$sliceResult[$uid][$nid]}) ";
+			}
 		}
+		$sql .= implode(',',$tmp);
+		//tai_vardebug($tmp);//sliceResult=array(uid=>array(nid=>weight))
+		tai_mysqlExec($sql);
 	}
-	$sql .= implode(',',$tmp);
-	//tai_vardebug($tmp);//result=array(uid=>array(nid=>weight))
-	tai_mysqlExec($sql);
 ?>
