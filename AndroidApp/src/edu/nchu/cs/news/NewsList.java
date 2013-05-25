@@ -28,7 +28,8 @@ public class NewsList extends Activity {
 	private LinearLayout ll_newsListContent;
 	private TextView tv_newsListTitle;
 	private int ListType = 0; // 0=today, 1=date, 2=cateDay
-	protected static final int handle_addNewsList = 0x10001,handle_closeList = 0x10002;
+	protected static final int handle_addNewsList = 0x10001,
+			handle_closeList = 0x10002;
 	private ArrayList<HashMap<String, String>> newsItems = null;
 	private NewsDataModel newsDataModel;
 	private String filterData = null;
@@ -108,7 +109,7 @@ public class NewsList extends Activity {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case handle_addNewsList:
-				addNewsListGUIHandle();
+				mHandler.postDelayed(addNewsListTask, 0);
 				break;
 			case handle_closeList:
 				Toast.makeText(getApplicationContext(), "系統沒有推薦新聞給您。",
@@ -130,22 +131,22 @@ public class NewsList extends Activity {
 					switch (ListType) {
 					case 0: // today
 						newsItems = newsDataModel.newslist_today();
-						if(newsItems.size()==0)
+						if (newsItems.size() == 0)
 							throw new Exception("todayNoData");
 						break;
 					case 1: // day
 						newsItems = newsDataModel.newslist_day(filterData);
 						break;
 					case 2: // category
-						newsItems = newsDataModel.newslist_cate(Integer.parseInt(filterData));
+						newsItems = newsDataModel.newslist_cate(Integer
+								.parseInt(filterData));
 						break;
 					}
 					Message msg = new Message();
 					msg.what = handle_addNewsList;
 					mHandler.sendMessage(msg);
 				} catch (Exception e) {
-					if(e.getMessage().equals("todayNoData"))
-					{
+					if (e.getMessage().equals("todayNoData")) {
 						Message msg = new Message();
 						msg.what = handle_closeList;
 						mHandler.sendMessage(msg);
@@ -157,34 +158,38 @@ public class NewsList extends Activity {
 		mThread.start();
 	}
 
-	private void addNewsListGUIHandle() {
-		if (newsItems == null) {
-			Log.e(ACTIVITY_TAG, "addNewsListGUIHandle null error.");
-		}
-		try {
-			for (int i = 0; i < newsItems.size(); i++) {
-				HashMap<String, String> item = (HashMap<String, String>) newsItems
-						.get(i);
-				View ListItemView = inflater.inflate(
-						R.layout.new_news_list_view, ll_newsListContent, false);
-
-				TextView tv_newsItemDate = (TextView) ListItemView
-						.findViewById(R.id.tv_newsItemDate), tv_newsItemTitle = (TextView) ListItemView
-						.findViewById(R.id.tv_newsItemTitle);
-
-				ListItemView.setOnClickListener(clickViewNews);
-				ListItemView.setTag(item.get("nid"));
-				tv_newsItemTitle.setText(item.get("title"));
-				tv_newsItemDate.setText(item.get("date"));
-
-				ll_newsListContent.addView(ListItemView);
+	private Runnable addNewsListTask = new Runnable() {
+		public void run() {
+			/* Do something… */
+			if (newsItems == null || newsItems.size() == 0)
+			{
+				newsItems = null;
+				hideProgressBar();
+				return;
 			}
-		} catch (Exception e) {
-			Log.e(ACTIVITY_TAG,e.getMessage());
+
+			HashMap<String, String> item = (HashMap<String, String>) newsItems
+					.get(0);
+			View ListItemView = inflater.inflate(R.layout.new_news_list_view,
+					ll_newsListContent, false);
+
+			TextView tv_newsItemDate = (TextView) ListItemView
+					.findViewById(R.id.tv_newsItemDate), tv_newsItemTitle = (TextView) ListItemView
+					.findViewById(R.id.tv_newsItemTitle);
+
+			ListItemView.setOnClickListener(clickViewNews);
+			ListItemView.setTag(item.get("nid"));
+			tv_newsItemTitle.setText(item.get("title"));
+			tv_newsItemDate.setText(item.get("date"));
+
+			ll_newsListContent.addView(ListItemView);
+
+			newsItems.remove(0);
+
+			mHandler.postDelayed(addNewsListTask, 20);
+			// call itself
 		}
-		newsItems = null;
-		hideProgressBar();
-	}
+	};
 
 	private void showProgressBar() {
 		circleProgressBar.setVisibility(View.VISIBLE);

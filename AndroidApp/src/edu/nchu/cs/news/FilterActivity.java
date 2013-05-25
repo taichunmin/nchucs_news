@@ -86,7 +86,7 @@ public class FilterActivity extends Activity {
 
 			public void run() {
 				try {
-					if(rssNameMap == null)
+					if (rssNameMap == null)
 						rssNameMap = newsDataModel.fetch_rss_name();
 					if (filterRid) {
 						filterItems = newsDataModel.cnt_cate();
@@ -116,6 +116,7 @@ public class FilterActivity extends Activity {
 	private void addFilterListGUIHandle() {
 		if (filterItems == null) {
 			Log.e(ACTIVITY_TAG, "addFilterListGUIHandle null error.");
+			return;
 		}
 		try {
 			for (int i = 0; i < filterItems.size(); i++) {
@@ -131,7 +132,8 @@ public class FilterActivity extends Activity {
 
 				ListItemView.setOnClickListener(clickNewsList);
 				ListItemView.setTag(item.get(filterRid ? "rid" : "date"));
-				tv_filterText.setText(filterRid ? rssNameMap.get(item.get("rid")) : item.get("date"));
+				tv_filterText.setText(filterRid ? rssNameMap.get(item
+						.get("rid")) : item.get("date"));
 				tv_filterCnt.setText(item.get("cnt"));
 
 				ll_filterListContent.addView(ListItemView);
@@ -148,7 +150,8 @@ public class FilterActivity extends Activity {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case handle_addFilterList:
-				addFilterListGUIHandle();
+				//addFilterListGUIHandle();
+				mHandler.postDelayed(addFilterListTask, 20);
 				break;
 			}
 		}
@@ -162,13 +165,47 @@ public class FilterActivity extends Activity {
 				intent.setClass(FilterActivity.this, NewsList.class);
 				Bundle bundle = new Bundle();
 				bundle.putString("DATA", (String) v.getTag());
-				bundle.putString("TITLE", filterRid ? rssNameMap.get((String) v.getTag()) : (String) v.getTag());
+				bundle.putString("TITLE",
+						filterRid ? rssNameMap.get((String) v.getTag())
+								: (String) v.getTag());
 				bundle.putString("LIST_TYPE", filter);
 				intent.putExtras(bundle);
 				startActivity(intent);
 			} catch (Exception e) {
 				Log.e(ACTIVITY_TAG, e.toString());
 			}
+		}
+	};
+
+	private Runnable addFilterListTask = new Runnable() {
+		public void run() {
+			/* Do something¡K */
+			if (filterItems == null || filterItems.size() == 0) {
+				filterItems = null;
+				hideProgressBar();
+				return;
+			}
+			HashMap<String, String> item = (HashMap<String, String>) filterItems
+					.get(0);
+			View ListItemView = inflater.inflate(R.layout.new_filter_list_view,
+					ll_filterListContent, false);
+
+			TextView tv_filterCnt = (TextView) ListItemView
+					.findViewById(R.id.tv_filterCnt), tv_filterText = (TextView) ListItemView
+					.findViewById(R.id.tv_filterText);
+
+			ListItemView.setOnClickListener(clickNewsList);
+			ListItemView.setTag(item.get(filterRid ? "rid" : "date"));
+			tv_filterText.setText(filterRid ? rssNameMap.get(item.get("rid"))
+					: item.get("date"));
+			tv_filterCnt.setText(item.get("cnt"));
+
+			ll_filterListContent.addView(ListItemView);
+
+			filterItems.remove(0);
+
+			mHandler.postDelayed(addFilterListTask, 20);
+			// call itself
 		}
 	};
 }

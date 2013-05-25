@@ -181,8 +181,10 @@ public class MainActivity extends Activity {
 	private View.OnClickListener listen_btnSetting = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			startActivity(new Intent().setClass(MainActivity.this,
-					SettingsActivity.class));
+			Toast.makeText(getApplicationContext(), "設定頁尚未開放。",
+					Toast.LENGTH_SHORT).show();
+//			startActivity(new Intent().setClass(MainActivity.this,
+//					SettingsActivity.class));
 		}
 	};
 
