@@ -53,7 +53,7 @@
 	
 	// 開始對暫時 TABLE 中的新聞做處理
 	// 先濾除使用者已看過的新聞，再依照時間排序
-	$sql = "select c.nid,c.title,c.`news_t` from `today_$rand` as a left join `viewlog` as b on b.uid='{$ses->uid}' and a.nid=b.nid left join `news` as c on a.nid=c.nid where b.nid is null order by `news_t` desc";
+	$sql = "select distinct c.nid,c.title,c.`news_t` from `today_$rand` as a left join `viewlog` as b on b.uid='{$ses->uid}' and a.nid=b.nid left join `news` as c on a.nid=c.nid where b.nid is null order by `news_t` desc";
 		//echo $sql.'<br />';
 	$rcmdRes = mysql_query($sql);
 	if(mysql_num_rows($rcmdRes)==0)
