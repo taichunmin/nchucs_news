@@ -146,11 +146,11 @@
 	$result = ontology(null);
 	$sql = "TRUNCATE `ontology`";
 	tai_mysqlExec($sql);
-	$sql = "insert into `ontology` (`uid`,`nid`,`weight`) values ";
-	$tmp = array();
 	for( $i=0; $i<count($result); $i+=10 )
 	{
 		$sliceResult = array_slice($result, $i, 10, true);
+		$sql = "insert into `ontology` (`uid`,`nid`,`weight`) values ";
+		$tmp = array();
 		foreach( array_keys($sliceResult) as $uid )
 		{
 			$i = 0;
