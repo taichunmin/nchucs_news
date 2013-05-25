@@ -2,7 +2,6 @@
 include_once('include.php');
 class similarity_C
 {
-	private $TOP_N = 20;
 	private function uid_check_order( &$uid1, &$uid2 )
 	{
 		if( $uid1 > $uid2 )
@@ -41,28 +40,19 @@ class similarity_C
 			return false;
 		return true;
 	}
-	/**
-	 * Fixed 2013-05-24 by Casper
-	 * @param int $uid1
-	 * @param int $uid2
-	 * @param int $num, shown number. There is no limitation if $numFlag !=0 
-	 */
-	public function get( $uid1=0, $uid2=0, $numFlag=0 )
+	public function get( $uid1=0, $uid2=0 )
 	{
 		if( $uid1 == 0 && $uid2 == 0 )
 			return NULL;
 		else if( $uid2 == 0 )
 		{
-//			$sql = "select `uid` from `user` where `uid` != '$uid1' order by `uid`";
-//			$res = mysql_query($sql);
-//			$uid = array();
-//			while( $row = mysql_fetch_assoc($res) )
-//				$simi[ $row['uid'] ] = 0;
-//			@mysql_free_result($res);
-			if( $numFlag != 0 )
-				$sql = "select * from `similarity` where `uid1` = '$uid1' or `uid2` = '$uid1' order by simi DESC";
-			else
-				$sql = "select * from `similarity` where `uid1` = '$uid1' or `uid2` = '$uid1' order by simi DESC limit 0,$this->TOP_N";
+			$sql = "select `uid` from `user` where `uid` != '$uid1' order by `uid`";
+			$res = mysql_query($sql);
+			$uid = array();
+			while( $row = mysql_fetch_assoc($res) )
+				$simi[ $row['uid'] ] = 0;
+			@mysql_free_result($res);
+			$sql = "select * from `similarity` where `uid1` = '$uid1' or `uid2` = '$uid1'";
 			$res = mysql_query($sql);
 			while( $row = mysql_fetch_assoc($res) )
 			{
@@ -71,7 +61,7 @@ class similarity_C
 				else $simi[ $row['uid1'] ] = $row['simi'];
 			}
 			@mysql_free_result($res);
-//			arsort($simi); // order value of simi by query
+			arsort($simi);
 			return $simi;
 		}
 		else

@@ -46,7 +46,7 @@
 	}
 ?>
 	<div data-role="collapsible" data-content-theme="d" data-theme="b">
-		<h3>取得同好者列表</h3>
+		<h3>取得同好者列表  : TOP-20</h3>
 		<table class="viewTab">
 			<tr>
 				<th>姓名</th>
