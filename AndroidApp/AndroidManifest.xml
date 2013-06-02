@@ -47,10 +47,6 @@
             android:name="edu.nchu.cs.news.AboutActivity"
             android:label="@string/title_activity_about" >
         </activity>
-        <activity
-            android:name="edu.nchu.cs.news.SettingsActivity"
-            android:label="@string/title_activity_settings" >
-        </activity>
     </application>
 
 </manifest>
