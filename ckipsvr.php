@@ -34,7 +34,7 @@
 <?xml version="1.0" ?>
 <wordsegmentation version="0.1">
 <option showcategory="1" />
-<authentication username="taichunmin" password="12324123" />
+<authentication username="{$cfg['ckipsvr']['username']}" password="{$cfg['ckipsvr']['password']}" />
 <text>{$news['article']}</text>
 </wordsegmentation>
 XML;

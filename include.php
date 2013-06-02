@@ -14,7 +14,7 @@
 		'pageListSize' => 7,
 		'debug' => 1,
 	);
-	require('db.php');	// Just database setting
+	require('db.php');	// Just database and ckipsvr setting
 	function tai_mysqlConnect()	// 連接資料庫
 	{
 		global $cfg;

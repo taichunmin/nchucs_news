@@ -5,9 +5,15 @@
 	default:
 		$cfg['dbHost'] = 'localhost';
 		$cfg['dbUser'] = 'nchucsnews';
-		$cfg['dbPass'] = 't5KthfzGKpts4ctc';
+		$cfg['dbPass'] = 'Enter Your Password Here';
 		$cfg['dbDatabase'] = 'nchucsnews';
 		// mysqldump -u root -p nchucsnews > db.sql
 		break;
 	}
+	
+	// 新增 ckipsvr 的帳號密碼，需要去註冊
+	$cfg['ckipsvr'] = array(
+		'username' => 'taichunmin',
+		'password' => 'Enter Your Password Here',
+	);
 ?>
