@@ -9,9 +9,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -174,10 +172,10 @@ public class MainActivity extends Activity {
 	private View.OnClickListener listen_btnSetting = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			Toast.makeText(getApplicationContext(), "設定頁尚未開放。",
-					Toast.LENGTH_SHORT).show();
-//			startActivity(new Intent().setClass(MainActivity.this,
-//					SettingsActivity.class));
+//			Toast.makeText(getApplicationContext(), "設定頁尚未開放。",
+//					Toast.LENGTH_SHORT).show();
+			startActivity(new Intent().setClass(MainActivity.this,
+					SettingActivity.class));
 		}
 	};
 

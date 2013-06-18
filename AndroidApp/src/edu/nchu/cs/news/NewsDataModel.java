@@ -49,7 +49,7 @@ public class NewsDataModel {
 	public ArrayList<HashMap<String, String>> newslist_today()
 			throws JSONException, Exception {
 		String token = system_argu("token", null);
-		String url = "get=today&token=" + token;
+		String url = "get=today&token=" + token + "&simi_1st=" + system_argu("simi_1st", null) + "&simi_2st=" + system_argu("simi_2st", null) + "&simi_3st=" + system_argu("simi_3st", null) + "&onto_limit=" + system_argu("onto_limit", null);
 		return get_list(url);
 	}
 

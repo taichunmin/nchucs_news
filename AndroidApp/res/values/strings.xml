@@ -22,5 +22,15 @@
     <string name="crew1">技術組：戴均民、林書緯</string>
     <string name="crew2">文件組：朱奕安、許芳甄</string>
     <string name="email">Issue Report: \n\t taichunmin@gmail.com</string>
+    <string name="title_activity_setting">SettingActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="similar_setting_title">同好者推薦設定</string>
+    <string name="similar_setting_describe">系統會為您找出與您最相似的三位使用者，並推薦您他們閱讀過的新聞。請在底下設定，系統為您推薦的新聞數量。\n(每項最大值100)</string>
+    <string name="similar_setting_1st">相似者①</string>
+    <string name="similar_setting_2st">相似者②</string>
+    <string name="similar_setting_3st">相似者③</string>
+    <string name="ontology_setting_title">個人化推薦設定</string>
+    <string name="ontology_setting_describe">系統會根據您閱讀過的新聞，然後在今天的新聞中，推薦您可能會有興趣的新聞。\n(每項最大值100)</string>
+    <string name="ontology_setting_limit">推薦數量</string>
 
 </resources>
